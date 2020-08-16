@@ -49,7 +49,7 @@ namespace GKAS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,SubjectId,QuestionCount,Duration,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate")] Test test)
+        public ActionResult Create([Bind(Include = "TestId,Name,SubjectId,QuestionCount,Duration,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate")] Test test)
         {
             if (ModelState.IsValid)
             {

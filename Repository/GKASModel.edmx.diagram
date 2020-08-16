@@ -13,17 +13,17 @@
         <EntityTypeShape EntityType="GKASModel.CandidateTest" Width="1.5" PointX="8.25" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="GKASModel.Question" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GKASModel.Subject" Width="1.5" PointX="3.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="GKASModel.Test" Width="1.5" PointX="6" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="GKASModel.CandidateTestDetail" Width="1.5" PointX="10.5" PointY="6.75" IsExpanded="true" />
         <AssociationConnector Association="GKASModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.FK_CandidateTest_AspNetUsers" ManuallyRouted="false" />
-        <AssociationConnector Association="GKASModel.FK_CandidateTest_Test" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.FK_CandidateTestDetail_CandidateTest" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.FK_CandidateTestDetail_Question" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.FK_Question_Subject" ManuallyRouted="false" />
-        <AssociationConnector Association="GKASModel.FK_Test_Subject" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.AspNetUserRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="GKASModel.Test" Width="1.5" PointX="6" PointY="1.25" />
+        <AssociationConnector Association="GKASModel.FK_CandidateTest_Test" />
+        <AssociationConnector Association="GKASModel.FK_Test_Subject" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

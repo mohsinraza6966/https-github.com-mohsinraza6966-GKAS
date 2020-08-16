@@ -34,8 +34,8 @@ namespace Repository
         public Nullable<int> AverageQuestionTime { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual Test Test { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CandidateTestDetail> CandidateTestDetails { get; set; }
+        public virtual Test Test { get; set; }
     }
 }

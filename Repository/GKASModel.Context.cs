@@ -33,7 +33,7 @@ namespace Repository
         public virtual DbSet<CandidateTest> CandidateTests { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
-        public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<CandidateTestDetail> CandidateTestDetails { get; set; }
+        public virtual DbSet<Test> Tests { get; set; }
     }
 }
