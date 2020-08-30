@@ -1,24 +1,186 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+}
+.start-test-box
+{
+    background: #fff;
+    box-shadow: 0 0 20px #ccc;
+    border-radius: 4px;
+    padding: 60px 30px;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+.start-test-total-questions {
+    display: inline-block;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+.start-test-total-time {
+    display: inline-block;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.start-test-icons-text {
+    color: #444;
+    font-size: 14px;
+    padding-top: 6px;
 }
+
+.start-test-total-time {
+    padding-left: 50px;
+}
+
+.start-test-name {
+    color: #444;
+    font-size: 30px;
+    padding-bottom: 40px;
+    font-family: 'Poppins-Medium';
+}
+
+.start-test-topic-title {
+    color: #444;
+    font-size: 15px;
+    padding-top: 40px;
+    font-family: 'Poppins-Medium';
+    padding-bottom: 5px;
+}
+
+.start-test-topic-details {
+    color: #444;
+    font-size: 13px;
+    font-family: 'Poppins-Regular';
+    padding-left: 15em;
+    padding-right: 15em;
+}
+
+.start-test-btns {
+    padding-top: 40px;
+}
+
+.hint-container {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+/*START TEST*/
+
+/*TEST RESULT DETAIL*/
+
+.test-result-detail {
+    background: #fff;
+    box-shadow: 0 0 10px 0px #d8d8d8;
+    padding: 20px 20px;
+    border-radius: 4px;
+    min-height: 337px;
+}
+
+    .test-result-detail label {
+        font-family: 'Poppins-Bold' !important;
+    }
+
+    .test-result-detail .row {
+        margin-bottom: 5px;
+    }
+
+
+.test-result-chart {
+    background: #fff;
+    box-shadow: 0 0 10px 0px #d8d8d8;
+    padding: 20px 20px;
+    border-radius: 4px;
+    height: 337px;
+}
+
+.student-result-view .progress {
+    height: 9px;
+}
+
+.student-result-view-percentage {
+    color: #444;
+    font-family: Poppins-Medium, Arial, Helvetica, sans-serif !important;
+    position: absolute;
+    right: 15px;
+    top: 0px;
+    font-size: 20px;
+}
+
+.test-subject-icon {
+    border-radius: 50%;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+}
+
+    .test-subject-icon img {
+        width: 29px;
+        position: relative;
+        top: 12px;
+        left: 17px;
+    }
+
+.test-result-subject-bar {
+    padding-top: 10px;
+}
+
+.generic-white-box {
+    background: #fff;
+    box-shadow: 0 0 10px 0px #d8d8d8;
+    padding: 20px 20px;
+    border-radius: 4px;
+}
+
+.student-all-result-view .progress {
+    height: 9px;
+}
+
+.student-all-result-view .progress-bar {
+    background-color: #10E1BA;
+}
+
+.student-all-result-view-percentage {
+    color: #444;
+    font-family: Poppins-Medium, Arial, Helvetica, sans-serif !important;
+    position: absolute;
+    right: 15px;
+    top: 6px;
+    font-size: 17px;
+}
+
+.topics-result-list-progress {
+    padding-top: 10px;
+}
+
+.topics-result-list {
+    border-bottom: 1px solid #f5f5f5;
+    padding-top: 10px !important;
+    padding-bottom: 5px !important;
+}
+
+.test-back-btn .btn {
+    float: right;
+    margin-right: 0px;
+    margin-top: 30px;
+}
+
+.topics-result-list:nth-last-child(1) {
+    border: 0px;
+}
+
+.subjects-result-list:nth-last-child(1) {
+    border: 0px;
+}
+
+#CandidateResultPieChart {
+    margin: 0 auto;
+}
+
+.test-result-donut-chart {
+    position: relative;
+    left: -22px;
+    bottom: 36px;
+}
+
+.subjects-result-list {
+    border-bottom: 1px solid #f5f5f5;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/*TEST RESULT DETAIL*/
+

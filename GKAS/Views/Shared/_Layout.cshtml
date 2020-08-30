@@ -10,6 +10,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    <link href="@Url.Content("~/Content/kendo/web/kendo.common-material.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/kendo/web/kendo.rtl.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/kendo/web/kendo.material.min.css")" rel="stylesheet" />
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -33,7 +38,10 @@
                         <li>@Html.ActionLink("Question", "Index", "Question")</li>
                         <li>@Html.ActionLink("Test", "Index", "Test")</li>
                     }
-
+                    @if (User.IsInRole("candidate") && currentRole == "candidate")
+                    {
+                        <li>@Html.ActionLink("Test", "Index", "Test")</li>
+                    }
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
@@ -43,6 +51,7 @@
     </div>
     <div class="container body-content">
         @RenderBody()
+        @Html.Partial("_CommonHtml")
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - GKAS</p>
@@ -50,7 +59,11 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/SiteScript")
+    <script src="@Url.Content("~/Scripts/kendo/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/kendo.aspnetmvc.min.js")"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

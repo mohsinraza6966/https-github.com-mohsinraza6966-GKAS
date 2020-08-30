@@ -1,0 +1,53 @@
+﻿
+<div id="notificationMessageContainer" class=""></div>
+<div id="overlayBusy" class="overlay-busy">
+    <div class="img-loading"></div>
+    <div class="message-outer-container">
+        <div class="message-container"></div>
+    </div>
+</div>
+<div id="spinner">
+    <div class="fixed-logo">
+        @*<img src='@CommonFunction.GetFilePathWithVersion(Url.Content("~/Content/images/spinner-logo.png"))' />*@
+        @*<img src='@CommonFunction.GetFilePathWithVersion(Url.Content("~/Content/images/Spinners/preloader.gif"))' />*@
+        @*<span class="spinner"></span>*@
+    </div>
+</div>
+
+<script id="confirmationBox" type="text/x-kendo-template">
+    <div class="confirmation-box">
+        <p id="confirmationMessage" class="confirmation-message"> </p>
+        <div class="button-bar-confirm">
+            <button class="confirmation-ok-button btn btn-kips btn-blue">Confirm</button>
+            <button class="confirmation-cancel-button btn btn-kips btn-blue">Cancel</button>
+        </div>
+    </div>
+</script>
+<div id="divMessage" class="hidden">
+    <input id="hdnMessage" type="hidden" value="@TempData["MESSAGE"]" />
+    @TempData.Remove("MESSAGE")
+</div>
+
+<script type="text/javascript">
+   
+    CurrentPageAction = "@HttpContext.Current.Request.RequestContext.RouteData.Values["action"]";
+    IsCandidateRole = false;
+    
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

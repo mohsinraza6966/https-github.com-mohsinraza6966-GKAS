@@ -1,0 +1,460 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Test Information";
+
+    var resultDetailButtonCSS = (ViewBag.ShowDetailResult) ? "" : "cntr-hidden";
+
+}
+
+
+<div class="loader">
+    <div id="StartTestContainer" class="form-horizontal form-input-style student-test-container cntr-hidden">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-heading" id="lblSubjectName">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="start-test-box text-center">
+                <div class="start-test-name" id="lblTestHeading"></div>
+                <div class="start-test-total-questions">
+                    <div><img src='@Url.Content("~/Content/images/questions.svg")'></div>
+                    <div class="start-test-icons-text">
+                        <span id="lblTotalQuestions"></span>
+                        <span>Questions</span>
+                    </div>
+                </div>
+                <div class="start-test-total-time">
+                    <div><img src='@Url.Content("~/Content/images/time.svg")'></div>
+                    <div class="start-test-icons-text">
+                        <span id="lblDuration"></span>
+                        <span>Minutes</span>
+                    </div>
+                </div>
+                <div class="start-test-topic">
+                    <div class="start-test-topic-title">Topics</div>
+                    <div class="start-test-topic-details" id="lblTopics"></div>
+                </div>
+
+
+                <div class="start-test-btns">
+                    <input id="btnStartTest" type="button" value="Start Test" class="btn btn-kips" />
+                    <input id="btnCancelTest" type="button" value="Cancel" class="btn btn-kips" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="CandidateTestAttemptContainer" class="student-test-container cntr-hidden">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-4 pl0">
+                    <div class="test-attempt-heading-left">
+                        <p class="test-category-heading"></p>
+                    </div>
+                </div>
+                <div class="col-md-4" id="divTestStopWatchMain">
+                    <div class="test-attempt-heading-center">
+                        <div id="divTestStopWatch" class="lbl-test-time"></div>
+                    </div>
+                </div>
+                <div id="divdurationremainingquestion" class="col-md-4 pr0">
+                    <div class="test-attempt-heading-right">
+                        <p class="lbl-test-time-duration mb5">
+                            <img height="20" src='@Url.Content("~/Content/images/time.svg")'>
+                            <span id="divTestDuration"></span>
+                        </p>
+                        <p class="lbl-test-remaining-questions mb5">
+                            <img height="20" src='@Url.Content("~/Content/images/questions.svg")'>
+                            <span id="lblQuestionNumberShort"></span>
+                        </p>
+                        <div id="hintContainer" class="hint-container">
+                            <span id="hintDescription" data-content="">
+                                <img height="20" src='@Url.Content("~/Content/images/hint.svg")'>
+                            </span>
+                            <span class="hint-help">Hint</span>
+                            <div id="hintDescriptionWindow" class="hint-class"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 cntr-hidden pr0" id="divTestResultLegendMain">
+                    <div class="test-result-legend-main">
+                        <div class="legend-main-correct-answer">
+                            <span class="left-padding-5"><i class="fas fa-circle"></i> </span>
+                            <span>correct</span>
+                        </div>
+                        <div class="legend-main-incorrect-answer">
+                            <span class="left-padding-5"><i class="fas fa-circle"></i> </span>
+                            <span>incorrect</span>
+                        </div>
+                        <div class="legend-main-unattempted-answer">
+                            <span class="left-padding-5"><i class="fas fa-circle"></i> </span>
+                            <span>unattempted</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="question-nav-panel cntr-hidden">
+                    <div id="divTestResultLegend" class="test-result-legend cntr-hidden">
+                        @*<h3>TEST REVIEW</h3>*@
+                        <div class="lbl-legend"><span class="legend-correct-answer"></span>Correct</div>
+                        <div class="lbl-legend"><span class="legend-wrong-answer"></span>Incorrect</div>
+                        <div class="lbl-legend"><span class="legend-not-attempted"></span>Unattempted</div>
+
+                    </div>
+                    <div id="divQuestionNavigationPanel" class="test-view-nav">
+                    </div>
+                </div>
+                <div class="test-attempt-question-header">
+
+                </div>
+                <div class="test-attempt-question-body">
+
+
+                    <div id="divQuestionBody" class="question-detail"></div>
+                    <br />
+                    <div id="divQuestionOptionA" class="question-detail question-opt"><label>A)</label><label id="lblOptA" class="lbl-question-opt"></label></div>
+                    <div id="divQuestionOptionB" class="question-detail question-opt"><label>B)</label><label id="lblOptB" class="lbl-question-opt"></label></div>
+                    <div id="divQuestionOptionC" class="question-detail question-opt"><label>C)</label><label id="lblOptC" class="lbl-question-opt"></label></div>
+                    <div id="divQuestionOptionD" class="question-detail question-opt"><label>D)</label><label id="lblOptD" class="lbl-question-opt"></label></div>
+                    <div id="divQuestionOptionE" class="question-detail question-opt"><label>E)</label><label id="lblOptE" class="lbl-question-opt"></label></div>
+                    <div id="divQuestionDetail" class="cntr-hidden question-detail">
+                        <label>Explanation</label>
+                        <div id="lblQuestionExplantion"></div>
+                    </div>
+                </div>
+                <div class="test-attempt-question-footer">
+                    <div id="divCandidateAnswer" class="answer-bar">
+                        <div class="question-option-box">
+                            <div class="option-label">
+                                <label for="rdoA" class="lbl-radio">A</label>
+                            </div>
+                            <div id="divOptionA" class="div-question-option">
+                                <div class="option-value">
+                                    <input name="answer" value="A" id="rdoA" type="checkbox" data-makeRadio="false" class="custom-radio" /><label for="rdoA"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="question-option-box">
+                            <div class="option-label">
+                                <label for="rdoB" class="lbl-radio">B</label>
+                            </div>
+                            <div id="divOptionB" class="div-question-option">
+
+                                <div class="option-value">
+                                    <input name="answer" value="B" id="rdoB" type="checkbox" data-makeRadio="false" class="custom-radio" /><label for="rdoB"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="question-option-box">
+                            <div class="option-label">
+                                <label for="rdoC" class="lbl-radio">C</label>
+                            </div>
+                            <div id="divOptionC" class="div-question-option">
+                                <div class="option-value">
+                                    <input name="answer" value="C" id="rdoC" type="checkbox" data-makeRadio="false" class="custom-radio" /><label for="rdoC"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="question-option-box">
+                            <div class="option-label">
+                                <label for="rdoD" class="lbl-radio">D</label>
+                            </div>
+                            <div id="divOptionD" class="div-question-option">
+                                <div class="option-value">
+                                    <input name="answer" value="D" id="rdoD" type="checkbox" data-makeRadio="false" class="custom-radio" /><label for="rdoD"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="question-option-box">
+                            <div class="option-label">
+                                <label for="rdoE" class="lbl-radio">E</label>
+                            </div>
+                            <div id="divOptionE" class="div-question-option">
+
+                                <div class="option-value">
+                                    <input name="answer" value="E" id="rdoE" type="checkbox" data-makeRadio="false" class="custom-radio" /><label for="rdoE"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-bar">
+
+
+                        <div id="btnBack" class="test-view-btn cntr-hidden" style="display:none;">
+                            <span class="test-btn-text">Back</span>
+                            <span><i class="fal fa-long-arrow-alt-left"></i></span>
+                        </div>
+                        <div id="btnFirst" class="test-view-btn">
+                            <span class="test-btn-text">First</span>
+                            <span><i class="fal fa-step-backward"></i></span>
+                        </div>
+                        <div id="btnPrev" class="test-view-btn">
+                            <span class="test-btn-text">Prev</span>
+                            <span><i class="far fa-chevron-left"></i></span>
+                        </div>
+                        <div id="btnNext" class="test-view-btn">
+                            <span class="test-btn-text">Next</span>
+                            <span><i class="far fa-chevron-right"></i></span>
+                        </div>
+                        <div id="btnLast" class="test-view-btn">
+                            <span class="test-btn-text">Last</span>
+                            <span><i class="fal fa-step-forward"></i></span>
+                        </div>
+                        <div id="btnFinish" class="test-view-btn">
+                            <span class="test-btn-text">Finish</span>
+                            <span><i class="fal fa-check-circle"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="CandidateTestResultContainer" class="student-test-container cntr-hidden">
+        <div class="test-attempt-detail">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="page-heading col-md-10 result-page-heading">
+                        <label class="test-category-heading"></label>
+                    </div>
+                    <div class="col-md-2 no-padding test-back-btn">
+                        <a id="lnkBtnBack" class="btn btn-kips">BACK</a>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 no-padding">
+                    <div class="col-md-4">
+                        <div class="test-result-detail">
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Test Name: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTestName" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Subjects: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTestSubjects" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Total Questions: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTestQuestions" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Date: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTestDate" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    @*<label class="">Duration: </label>*@
+                                    <label class="">Average Question Time: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTestDuration" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Correct: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTotalCorrectQuestions" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Incorrect: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblTotalIncorrectQuestions" class=""></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5 col-xs-4">
+                                    <label class="">Unattempted: </label>
+                                </div>
+                                <div class="col-sm-7 col-xs-8">
+                                    <span id="lblUnattemptedQuestions" class=""></span>
+                                </div>
+                            </div>
+                            <div class="mt20 @resultDetailButtonCSS">
+                                <a id="lnkResultDetail" class="btn btn-kips-filled">Result Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="test-result-chart">
+
+                            <div id="TestResultPieChart">
+
+
+                            </div>
+                            @*<div id="divPieChart" class="test-result-donut-chart">
+                                @(Html.Kendo().Chart()
+                                      .Name("CandidateResultPieChart")
+                                      .Legend(legend => legend.Visible(false))
+                                      .ChartArea(chart => chart.Background("transparent"))
+                                      .Tooltip(tooltip => tooltip.Visible(true).Format("{0}%"))
+                                )
+                                                                </div>*@
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @*TABLE AREA*@
+
+
+        <div class="col-md-12 mt20 generic-white-box">
+            <div id="divSubjectTestResult" class="student-result-view">
+
+            </div>
+        </div>
+
+
+        <div class="col-md-12 mt20 generic-white-box mb20">
+            <div id="divTestTopicResult" class="student-all-result-view">
+
+            </div>
+        </div>
+
+        @*TABLE AREA*@
+    </div>
+
+    <input type="hidden" id="hfCandidateSOSId" value="@ViewBag.CandidateSOSId" />
+    <input type="hidden" id="hfSOSId" value="@ViewBag.SOSId" />
+    <input type="hidden" id="hfTestId" value="@ViewBag.TestId" />
+    <input type="hidden" id="hfUserId" value="@ViewBag.UserId" />
+    <input type="hidden" id="hfViewResult" value="@ViewBag.ShowResult" />
+    <input type="hidden" id="hfShowExplanation" value="@ViewBag.ShowExplanation.ToString().ToLower()" />
+    <input type="hidden" id="hfShowHint" value="@ViewBag.ShowHint.ToString().ToLower()" />
+    <input type="hidden" id="hfShowDetailResult" value="@ViewBag.ShowDetailResult.ToString().ToLower()" />
+    <input type="hidden" id="hfShowCorrectAnswer" value="@ViewBag.ShowCorrectAnswer.ToString().ToLower()" />
+    <input type="hidden" id="hfIsTestAttempted" value="false" />
+    <input type="hidden" id="hfTestType" value="@ViewBag.TestType" />
+    <input type="hidden" id="hfStartTime" value="" />
+</div>
+
+<script id="kendoSubjectTestResult" type="text/x-kendo-template">
+    # for (var i = 0; i < Subjects.length; i++) { #
+
+    <div class="col-md-12 subjects-result-list no-padding">
+        <div class="col-md-1">
+            <div class="test-subject-icon" style='background-color:#=Subjects[i].Color#'>
+                <img src="#=Subjects[i].Icon#" />
+            </div>
+        </div>
+
+        <div class="col-md-10 pos-relative test-result-subject-bar">
+            <div class="leaderboard-name">#=Subjects[i].SubjectName#</div>
+            <div class="leader-board-progress progress">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style='background-color: #=Subjects[i].Color#; width: #=Subjects[i].Percentage#%'>
+                </div>
+            </div>
+            <div class="student-result-view-percentage">#=Subjects[i].Percentage#%</div>
+        </div>
+        <div class="col-md-1 leaderboard-accuracy text-center">
+            <div class="accuracy-icon leaderboard-tooltip float-left" data-toggle="tooltip" title="Score">
+                <img src='@Url.Content("~/Content/images/score-icon.svg")'>
+                <span> #=Subjects[i].Score#</span>
+            </div>
+        </div>
+    </div>
+
+
+    # } #
+</script>
+
+<script id="kendoTopicTestResult" type="text/x-kendo-template">
+    # for (var i = 0; i < Topics.length; i++) { #
+
+    <div class="col-md-12 topics-result-list no-padding">
+        <div class="col-md-7 topics-result-list-progress">
+            <div class="leaderboard-name">#=Kips.UtilityFunctions.ApplyJNNFont(Topics[i].TopicName)#</div>
+            <div class="leader-board-progress progress">
+
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width:#=Topics[i].Percentage#%"></div>
+            </div>
+            <div class="student-all-result-view-percentage">#=Topics[i].Percentage#%</div>
+        </div>
+
+        <div class="col-md-1 leaderboard-accuracy">
+            <div class="accuracy-icon leaderboard-tooltip" data-toggle="tooltip" title="Total Marks">
+
+                <img src='@Url.Content("~/Content/images/totalmarks.svg")'>
+                <span> #=Topics[i].TotalMarks#</span>
+            </div>
+        </div>
+
+        <div class="col-md-1 leaderboard-accuracy">
+            <div class="accuracy-icon leaderboard-tooltip" data-toggle="tooltip" title="Correct">
+
+                <img src='@Url.Content("~/Content/images/correct.svg")'>
+                <span> #=Topics[i].CorrectQuestions#</span>
+            </div>
+        </div>
+
+        <div class="col-md-1 leaderboard-accuracy">
+            <div class="accuracy-icon leaderboard-tooltip" data-toggle="tooltip" title="Incorrect">
+
+                <img src='@Url.Content("~/Content/images/incorrect.svg")'>
+                <span> #=Topics[i].WrongQuestions#</span>
+            </div>
+        </div>
+
+        <div class="col-md-1 leaderboard-accuracy">
+            <div class="accuracy-icon leaderboard-tooltip" data-toggle="tooltip" title="Unattempted">
+
+                <img src='@Url.Content("~/Content/images/unattempted.svg")'>
+                <span> #=Topics[i].NotAttempted#</span>
+            </div>
+        </div>
+
+        <div class="col-md-1 leaderboard-accuracy">
+            <div class="accuracy-icon leaderboard-tooltip" data-toggle="tooltip" title="Score">
+
+                <img src='@Url.Content("~/Content/images/score-icon.svg")'>
+                <span> #=Topics[i].Score#</span>
+            </div>
+        </div>
+    </div>
+
+    # } #
+</script>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/TestAttemptManager")
+}
+
