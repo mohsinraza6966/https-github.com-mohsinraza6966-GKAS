@@ -24,6 +24,10 @@
         <AssociationConnector Association="GKASModel.FK_Question_Subject" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.FK_Test_Subject" ManuallyRouted="false" />
         <AssociationConnector Association="GKASModel.AspNetUserRoles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="GKASModel.TestConfiguration" Width="1.5" PointX="10.375" PointY="1" />
+        <EntityTypeShape EntityType="GKASModel.TestConfigurationDetail" Width="1.5" PointX="12.625" PointY="1.125" />
+        <EntityTypeShape EntityType="GKASModel.CandidateTestScoreView" Width="1.5" PointX="7.375" PointY="10.75" />
+        <AssociationConnector Association="GKASModel.FK_CatConfigDetail_CatConfiguration" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -12,8 +12,9 @@ function TestAttemptFormManager() {
         TestResult: "testresult",
         TestDetail: "testdetail"
     }
+    
     var globalVar = {
-        
+        AppHost: "http://localhost/GKAS/",
         TestAttemptViewModel: undefined,
         questionHintWindow: undefined,
         TotalQuestionCount: 0,
@@ -23,7 +24,15 @@ function TestAttemptFormManager() {
         TempStartTime: undefined,
         ViewResultDetail: false,
         CandidateTestInterval: undefined,
-        CurrentCandidateTestContainerType: "testresult"
+        CurrentCandidateTestContainerType: "testresult",
+        CandidateTestService: {
+            TestAttempt: "http://localhost/GKAS/api/CandidateTestService/GetTestAttempt",
+            TestResultDetail:"http://localhost/GKAS/api/CandidateTestService/GetTestResultDetail",
+            TestResult: "http://localhost/GKAS/api/CandidateTestService/GetTestResult",
+            SaveTest: "http://localhost/GKAS/api/CandidateTestService/SaveTest",
+            GetSOSProgress:"http://localhost/GKAS/api/CandidateTestService/GetSOSProgress",
+            TestList: "http://localhost/GKAS/api/CandidateTestService/GetTestList"
+        },
     };
 
     var domElement = {}
@@ -163,7 +172,7 @@ function TestAttemptFormManager() {
     }
 
     function Initialization() {
-
+        debugger
         // if view result param is true then show test result section //
         if (domElement.hfViewResult.val() == "result") {
             GetCandidateTestResult();
@@ -468,7 +477,7 @@ function TestAttemptFormManager() {
     function GetQuestionsListForTest() {
         var testId = domElement.hfTestId.val();
         var userId = domElement.hfUserId.val();
-        var actionUrl = "";//Kips.AppConstants.URL.API.CandidateTestService.TestAttempt + "?TestId=" + testId + "&UserId=" + userId;
+        var actionUrl = globalVar.CandidateTestService.TestAttempt + "?TestId=" + testId +"";
 
         ServiceManager.Get(actionUrl, true, GetQuestionsListForTestCallBack, testId, userId);
     }
@@ -647,9 +656,9 @@ function TestAttemptFormManager() {
 
 
         var currentTime = new Date().toISOString();
-        //var actionUrl = Kips.AppConstants.URL.API.CandidateTestService.TestAttempt + "?TestId= " + testId + "&UserId=" + userId + "&QuestionId=" + questId + "&CandidateAnswer=" + candidateAnswer + "&StartTime=" + currentTime + "&EndTime=" + currentTime;
+        var actionUrl =globalVar.CandidateTestService.TestAttempt + "?TestId= " + testId + "&QuestionId=" + questId + "&CandidateAnswer=" + candidateAnswer + "&StartTime=" + currentTime + "&EndTime=" + currentTime;
 
-        //ServiceManager.Get(actionUrl, true, GetQuestionForCATCallBack, testId, userId);
+        ServiceManager.Get(actionUrl, true, GetQuestionForCATCallBack, testId, userId);
     }
 
     function GetQuestionForCATCallBack(response, param) {
@@ -882,7 +891,7 @@ function TestAttemptFormManager() {
         var SoSId = domElement.hfSOSId.val();
         var CandidateSOSId = domElement.hfCandidateSOSId.val();
         var userId = domElement.hfUserId.val();
-        //var actionUrl = Kips.AppConstants.URL.API.CandidateTestService.SaveTest;
+        var actionUrl = globalVar.CandidateTestService.SaveTest;
 
         var testStartTime = domElement.hfStartTime.val();
         var testEndTime = new Date();
@@ -910,20 +919,20 @@ function TestAttemptFormManager() {
 
         });
 
-        //if (domElement.hfTestType.val() == "CAT") {
-        //    var questId = 0
-        //    if (globalVar.QuestionList.length != 0) {
-        //        questId = globalVar.QuestionList[0].QuestionId;
-        //    }
-        //    var candidateAnswer = GetCandidateAnswer();
-        //    //globalVar.TestAttemptViewModel.QuestionId = questId;
-        //    //globalVar.TestAttemptViewModel.CandidateAnswer = candidateAnswer;
+        if (domElement.hfTestType.val() == "CAT") {
+            var questId = 0
+            if (globalVar.QuestionList.length != 0) {
+                questId = globalVar.QuestionList[0].QuestionId;
+            }
+            var candidateAnswer = GetCandidateAnswer();
+            //globalVar.TestAttemptViewModel.QuestionId = questId;
+            //globalVar.TestAttemptViewModel.CandidateAnswer = candidateAnswer;
 
-        //    candidateAttemptedTest.CATQuestionId = questId;
-        //    candidateAttemptedTest.CATCandidateAnswer = candidateAnswer;
-        //}
+            candidateAttemptedTest.CATQuestionId = questId;
+            candidateAttemptedTest.CATCandidateAnswer = candidateAnswer;
+        }
 
-        //ServiceManager.Post(actionUrl, JSON.stringify(globalVar.TestAttemptViewModel), true, SaveCandidateTestCallBack, testId, null, true);
+        ServiceManager.Post(actionUrl, JSON.stringify(globalVar.TestAttemptViewModel), true, SaveCandidateTestCallBack, testId, null, true);
 
         ServiceManager.Post(actionUrl, JSON.stringify(candidateAttemptedTest), true, SaveCandidateTestCallBack, testId, null, true, "Saving test...");
     }
@@ -953,7 +962,7 @@ function TestAttemptFormManager() {
 
         appendQuestionNavigationPanelInSiteMenu();
 
-        SiteScript.ChangeNavigationMenuState(true);
+        //SiteScript.ChangeNavigationMenuState(true);
 
         AdjustContainersWidthAndHeight();
 
@@ -1020,7 +1029,7 @@ function TestAttemptFormManager() {
         if (model) {
             domElement.divSubjectTestResult.html(kendo.render(template, model));
 
-            setTimeout(function () { SiteScript.InjectSVG(); }, 1000);
+            //setTimeout(function () { SiteScript.InjectSVG(); }, 1000);
             //SiteScript.InjectSVG();
         }
 
@@ -1072,8 +1081,8 @@ function TestAttemptFormManager() {
         $('#divTestTimeDetail').empty().append(elHeading);
         var testId = domElement.hfTestId.val();
         var candidateSOSId = domElement.hfCandidateSOSId.val();
-        //var actionUrl = Kips.AppConstants.URL.API.CandidateTestService.TestResultDetail + "?TestId=" + testId + "&CandidateSOSId=" + candidateSOSId + "";
-        //ServiceManager.Get(actionUrl, true, ViewCandidateTestResultDetailCallBack, testId, candidateSOSId);
+        var actionUrl =globalVar.CandidateTestService.TestResultDetail + "?TestId=" + testId +"";
+        ServiceManager.Get(actionUrl, true, ViewCandidateTestResultDetailCallBack, testId, candidateSOSId);
 
         AdjustContainersWidthAndHeight();
     }
@@ -1266,7 +1275,7 @@ function TestAttemptFormManager() {
 
     function SetTestTiming() {
 
-        var duration = globalVar.TestAttemptViewModel.Duration;
+        var duration = 10;// globalVar.TestAttemptViewModel.Duration;
 
         var totalTime = duration + " Min";
         domElement.divTestDuration.text(totalTime);
@@ -1476,8 +1485,8 @@ function TestAttemptFormManager() {
         var candidateSOSId = domElement.hfCandidateSOSId.val();
         var showResult = domElement.hfViewResult.val();
 
-        //var actionUrl = Kips.AppConstants.URL.API.CandidateTestService.TestResult + "?TestId=" + testId + "&CandidateSOSId=" + candidateSOSId;
-        //ServiceManager.Get(actionUrl, true, ShowCandidateTestResultCallBack, testId, true, true, ".loader");
+        var actionUrl = globalVar.CandidateTestService.TestResult + "?TestId=" + testId+"";
+        ServiceManager.Get(actionUrl, true, ShowCandidateTestResultCallBack, testId, true, true, ".loader");
     }
 
     function ShowCandidateTestResultCallBack(response, param) {

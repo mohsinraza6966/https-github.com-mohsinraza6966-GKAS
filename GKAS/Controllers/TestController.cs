@@ -18,33 +18,38 @@ namespace GKAS.Controllers
         private GKASEntities db = new GKASEntities();
 
         // GET: Test
-
-        public ActionResult Attempt(long testId ,string viewResult = "result")
+        public long GetLoggedInUserId()
         {
-            var userId = Int64.Parse(User.Identity.GetUserId());
+            var id = User.Identity.GetUserId();
+            Int64.TryParse(id, out long userId);
+            return userId;
+        }
+        public ActionResult Attempt(long testId)
+        {
+            var userId = GetLoggedInUserId();
             // Candidate is not allowed to take attempt test again.
 
             bool isTestAttempted = db.CandidateTests.Any(ct => ct.TestId == testId && ct.UserId == userId);
-          
 
-            if ((viewResult == ResultType.Result || viewResult == ResultType.Detail) || !isTestAttempted)
+
+            if (!isTestAttempted)
             {
-                
+
 
                 ViewBag.SOSId = 0;
                 ViewBag.CandidateSOSId = 0;
                 ViewBag.TestId = testId;
-                ViewBag.ShowResult = isTestAttempted ?"" :"result";
-                ViewBag.UserId =  userId ;
+                ViewBag.ShowResult = isTestAttempted ? "result" : "";
+                ViewBag.UserId = userId;
                 ViewBag.TestType = 1;//CAT
                 ViewBag.TestCategory = 1;//OnlineTest
-                ViewBag.ShowExplanation = true;
+                ViewBag.ShowExplanation = false;
                 ViewBag.ShowHint = true;
-                ViewBag.ShowDetailResult = true;
-                ViewBag.ShowCorrectAnswer = true;
+                ViewBag.ShowDetailResult = false;
+                ViewBag.ShowCorrectAnswer = false;
                 ViewBag.IsFLP = false;
 
-               
+
             }
             return View();
         }
@@ -55,7 +60,7 @@ namespace GKAS.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             var model = db.Tests.ToList().Select(t => new TestViewModel
             {
                 Duration = t.Duration,

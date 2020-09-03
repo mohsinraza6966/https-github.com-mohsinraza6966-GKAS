@@ -241,41 +241,7 @@ SiteScript = {
 
 
         //submit candidate "How did you know" answer
-        $('#btnHowYouKnow').off('click');
-        $('#btnHowYouKnow').on('click', function () {
-
-            var answer = '';
-            var rdoAnswer = $(this).closest('#howYouKnowWindow').find('input[type=radio]:checked');
-
-            if (rdoAnswer.length > 0) {
-                answer = rdoAnswer.val().toLowerCase() == 'other' ? $('#txtHowYouKnowOther').val().trim() : rdoAnswer.val();
-            }
-
-            //validate form before submit
-            if (answer.trim().length == 0) {
-
-                SiteScript.MessageBox.ShowError(SiteScript.GetApplicationMessage(Kips.AppConstants.ApplicationMessageKey.Validation_SelectAnyOption_Required)); //'Please select any option'
-                return;
-            }
-
-            $(this).attr("disabled", true);
-
-            let url = Kips.AppConstants.URL.API.CandidateService.SaveHowYouKnow + '?HowYouKnowAnswer=' + answer;
-
-            ServiceManager.Post(url, null, true, function (response) {
-
-
-                if (response && response.length > 0 && response[0]) {
-                    SiteScript.globalVar.howYouKnowWindow.close();
-
-                } else {
-                    $(this).attr("disabled", false);
-                }
-
-            });
-        });
-
-
+        
     },
 
     ShowHideLeftMenu: function (isShowMenu) {
@@ -471,18 +437,6 @@ SiteScript = {
     //},
 
     
-
-    ChangeNavigationMenuState: function (isPinMenu) {
-
-        if (isPinMenu && !Kips.AppVar.AppSetting.IsNavigationMenuPinned) {
-            $('.menu-toggle-button').click();
-        }
-
-        else if (!isPinMenu && Kips.AppVar.AppSetting.IsNavigationMenuPinned) {
-            $('.menu-toggle-button').click();
-        }
-
-    },
 
     OnOrientationChange: function () {
         //

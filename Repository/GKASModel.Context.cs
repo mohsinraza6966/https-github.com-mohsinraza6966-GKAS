@@ -12,6 +12,8 @@ namespace Repository
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class GKASEntities : DbContext
     {
@@ -35,5 +37,52 @@ namespace Repository
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<CandidateTestDetail> CandidateTestDetails { get; set; }
+        public virtual DbSet<TestConfiguration> TestConfigurations { get; set; }
+        public virtual DbSet<TestConfigurationDetail> TestConfigurationDetails { get; set; }
+        public virtual DbSet<CandidateTestScoreView> CandidateTestScoreViews { get; set; }
+    
+        public virtual ObjectResult<CandidateTestResult_Get_Result> CandidateTestResult_Get(Nullable<long> testId, Nullable<long> userId)
+        {
+            var testIdParameter = testId.HasValue ?
+                new ObjectParameter("TestId", testId) :
+                new ObjectParameter("TestId", typeof(long));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CandidateTestResult_Get_Result>("CandidateTestResult_Get", testIdParameter, userIdParameter);
+        }
+    
+        public virtual ObjectResult<CandidateTestResultDetail_Get_Result> CandidateTestResultDetail_Get(Nullable<long> testId, Nullable<long> userId)
+        {
+            var testIdParameter = testId.HasValue ?
+                new ObjectParameter("TestId", testId) :
+                new ObjectParameter("TestId", typeof(long));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CandidateTestResultDetail_Get_Result>("CandidateTestResultDetail_Get", testIdParameter, userIdParameter);
+        }
+    
+        public virtual ObjectResult<CATConfigurationDetail_Get_Result> CATConfigurationDetail_Get(Nullable<int> testConfigId)
+        {
+            var testConfigIdParameter = testConfigId.HasValue ?
+                new ObjectParameter("TestConfigId", testConfigId) :
+                new ObjectParameter("TestConfigId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CATConfigurationDetail_Get_Result>("CATConfigurationDetail_Get", testConfigIdParameter);
+        }
+    
+        public virtual ObjectResult<CATQuestion_Get_Result> CATQuestion_Get(Nullable<long> testId)
+        {
+            var testIdParameter = testId.HasValue ?
+                new ObjectParameter("TestId", testId) :
+                new ObjectParameter("TestId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CATQuestion_Get_Result>("CATQuestion_Get", testIdParameter);
+        }
     }
 }

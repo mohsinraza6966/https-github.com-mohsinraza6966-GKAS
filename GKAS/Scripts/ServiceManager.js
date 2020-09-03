@@ -47,7 +47,7 @@ var ServiceManager = {
         $.ajax({
             url: url,
             headers: {
-                'api-security-key': sk,
+                'api-security-key': undefined, //sk,
                 'contentType': 'application/x-www-form-urlencoded'
             },
             type: ServiceManager.RequestType.Get,
@@ -119,7 +119,7 @@ var ServiceManager = {
         $.ajax({
             url: url,
             headers: {
-                'api-security-key': sk,
+                'api-security-key': undefined,
             },
             type: ServiceManager.RequestType.Post,
             data: objData,
@@ -193,7 +193,7 @@ var ServiceManager = {
         $.ajax({
             url: url,
             headers: {
-                'api-security-key': sk,
+                'api-security-key': undefined, //sk,
             },
             type: ServiceManager.RequestType.Put,
             data: objData,
@@ -236,7 +236,7 @@ var ServiceManager = {
         $.ajax({
             url: url,
             headers: {
-                'api-security-key': sk,
+                'api-security-key': undefined, //sk,
             },
             type: ServiceManager.RequestType.Delete,
             dataType: ServiceManager.DataType.JSON,
