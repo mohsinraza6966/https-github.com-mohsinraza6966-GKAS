@@ -247,6 +247,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\AppConstants.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\kendo\web\fonts\DejaVu\DejaVuSans-Bold.ttf" />
@@ -268,6 +269,13 @@
     <Content Include="Content\kendo\web\fonts\glyphs\WebComponentsIcons.eot" />
     <Content Include="Content\kendo\web\fonts\glyphs\WebComponentsIcons.ttf" />
     <Content Include="Content\kendo\web\fonts\glyphs\WebComponentsIcons.woff" />
+    <Content Include="Content\images\input-icon-sprite.png" />
+    <Content Include="fonts\poppins\Poppins-Black.ttf" />
+    <Content Include="fonts\poppins\Poppins-Bold.ttf" />
+    <Content Include="fonts\poppins\Poppins-Light.ttf" />
+    <Content Include="fonts\poppins\Poppins-Medium.ttf" />
+    <Content Include="fonts\poppins\Poppins-Regular.ttf" />
+    <Content Include="fonts\poppins\Poppins-SemiBold.ttf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\countdowntimer.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

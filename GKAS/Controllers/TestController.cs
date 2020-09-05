@@ -24,7 +24,7 @@ namespace GKAS.Controllers
             Int64.TryParse(id, out long userId);
             return userId;
         }
-        public ActionResult Attempt(long testId)
+        public ActionResult Attempt(long testId , string viewResult = "")
         {
             var userId = GetLoggedInUserId();
             // Candidate is not allowed to take attempt test again.
@@ -32,7 +32,7 @@ namespace GKAS.Controllers
             bool isTestAttempted = db.CandidateTests.Any(ct => ct.TestId == testId && ct.UserId == userId);
 
 
-            if (!isTestAttempted)
+            if ((viewResult == ResultType.Result || viewResult == ResultType.Detail) || !isTestAttempted)
             {
 
 
@@ -44,9 +44,9 @@ namespace GKAS.Controllers
                 ViewBag.TestType = 1;//CAT
                 ViewBag.TestCategory = 1;//OnlineTest
                 ViewBag.ShowExplanation = false;
-                ViewBag.ShowHint = true;
-                ViewBag.ShowDetailResult = false;
-                ViewBag.ShowCorrectAnswer = false;
+                ViewBag.ShowHint = false;
+                ViewBag.ShowDetailResult = true;
+                ViewBag.ShowCorrectAnswer = true;
                 ViewBag.IsFLP = false;
 
 

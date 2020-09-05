@@ -27,7 +27,8 @@ namespace GKAS
 
             //Master page script
             bundles.Add(new ScriptBundle("~/bundles/SiteScript").Include(
-                        "~/Scripts/ServiceManager.js",     
+                        //"~/Scripts/AppConstants.js",
+                        "~/Scripts/ServiceManager.js",
                         "~/Scripts/SiteScript.js"
                         ));
 

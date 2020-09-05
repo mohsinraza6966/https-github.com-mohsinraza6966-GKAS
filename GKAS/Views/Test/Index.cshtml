@@ -66,7 +66,10 @@
                 {
                     if (item.IsAttempted)
                     {
-                        @Html.ActionLink("View Result", "ViewResult", new { testId = item.TestId })
+                        // public const string Result = "result";
+                        // public const string Detail = "detail";
+                        //viewResult
+                        @Html.ActionLink("View Result", "Attempt", new { testId = item.TestId, viewResult = "result" })
                     }
                     else
                     {

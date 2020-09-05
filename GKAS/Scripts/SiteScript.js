@@ -8,7 +8,19 @@ SiteScript = {
         scrollTop: 0,
         howYouKnowWindow: null,
         CandidateSplashedVideoPopUpWindow: null,
-        kendoWindowElement: undefined
+        kendoWindowElement: undefined,
+        MessageType: {
+            Error: "Error",
+            Info: "Info",
+            Warning: "Warning",
+            Success: "Success"
+        },
+        ProgressBarType: {
+            Success: "progress-bar-success",
+            Info: "progress-bar-info",
+            Warning: "progress-bar-warning",
+            Danger: "progress-bar-danger"
+        },
     },
 
     Init: function () {
@@ -27,7 +39,7 @@ SiteScript = {
 
         this.BindEvents();
         this.DetectResolution();
-       // this.InjectSVG();
+        // this.InjectSVG();
 
         this.CheckFloatingLabelsFocus();
 
@@ -241,7 +253,7 @@ SiteScript = {
 
 
         //submit candidate "How did you know" answer
-        
+
     },
 
     ShowHideLeftMenu: function (isShowMenu) {
@@ -436,7 +448,7 @@ SiteScript = {
 
     //},
 
-    
+
 
     OnOrientationChange: function () {
         //
@@ -547,22 +559,22 @@ SiteScript = {
 
         switch (objMessage.Type) {
 
-            case Kips.AppConstants.MessageType.Success:
+            case SiteScript.globalVar.MessageType.Success:
                 className = 'bg-success';
                 iconName = 'far fa-check-circle'
                 heading = 'Success';
                 break;
-            case Kips.AppConstants.MessageType.Info:
+            case SiteScript.globalVar.MessageType.Info:
                 className = 'bg-info';
                 iconName = 'far fa-info-circle'
                 heading = 'Info';
                 break;
-            case Kips.AppConstants.MessageType.Error:
+            case SiteScript.globalVar.MessageType.Error:
                 className = 'bg-danger';
                 iconName = 'far fa-times-circle'
                 heading = 'Error';
                 break;
-            case Kips.AppConstants.MessageType.Warning:
+            case SiteScript.globalVar.MessageType.Warning:
                 className = 'bg-warning';
                 iconName = 'far fa-exclamation-circle'
                 heading = 'Warning';
@@ -615,8 +627,8 @@ SiteScript = {
 
     AjaxFormEventHandler: {
         onAjaxError: function (xhr, status, entityName) {
-            if (xhr.statusText == Kips.AppConstants.HttpStatusCode.Forbidden) {
-                SiteScript.MessageBox.ShowError(Kips.AppConstants.HttpStatusCodeMessage.Forbidden);
+            if (xhr.statusText == 'Forbidden') {
+                SiteScript.MessageBox.ShowError('Forbidden');
             }
         },
     },
@@ -641,9 +653,9 @@ SiteScript = {
             //calling this function after loading dynamic content from tabstrip control
             SiteScript.AddRemoveCssClasses();
 
-         
 
-          
+
+
         },
 
         //this event will be called each time when tab is selected on clicked. 
@@ -695,9 +707,9 @@ SiteScript = {
         },
 
 
-    
+
         //Show/hide web site areas based on user's access level
-       
+
 
         ShowOnlyProgramMenuForCandidateSpecificPages: function () {
 
@@ -944,7 +956,7 @@ SiteScript = {
             }
         },
 
-     
+
 
         EnableBootstrapTooltip: function () {
             $('[data-toggle="tooltip"]').tooltip({

@@ -211,7 +211,7 @@ namespace GKAS.Models
 
         public int? DifficultyLevel { get; set; }
 
-        public int? TopicId { get; set; }
+        public long TopicId { get; set; }
 
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }

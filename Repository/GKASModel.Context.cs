@@ -32,14 +32,14 @@ namespace Repository
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-        public virtual DbSet<CandidateTest> CandidateTests { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
-        public virtual DbSet<CandidateTestDetail> CandidateTestDetails { get; set; }
         public virtual DbSet<TestConfiguration> TestConfigurations { get; set; }
         public virtual DbSet<TestConfigurationDetail> TestConfigurationDetails { get; set; }
         public virtual DbSet<CandidateTestScoreView> CandidateTestScoreViews { get; set; }
+        public virtual DbSet<CandidateTest> CandidateTests { get; set; }
+        public virtual DbSet<CandidateTestDetail> CandidateTestDetails { get; set; }
     
         public virtual ObjectResult<CandidateTestResult_Get_Result> CandidateTestResult_Get(Nullable<long> testId, Nullable<long> userId)
         {

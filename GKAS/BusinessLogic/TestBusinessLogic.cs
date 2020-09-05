@@ -513,18 +513,31 @@ namespace GKAS.BusinessLogic
 
                         db.CandidateTests.Add(model);
                         db.SaveChanges();
+                        //db.SaveChanges();
 
-                        lstTestDetail.AddRange(catModel.CATAttemptedQuestionList.Select(test => new CandidateTestDetail
-                        {
-                            CandidateTestId = model.CandidateTestId,
-                            QuestionId = test.QuestionId,
-                            StartTime = string.IsNullOrEmpty(test.StartTime) ? (DateTime?)null : Convert.ToDateTime(test.StartTime).ToUniversalTime(),
-                            EndTime = string.IsNullOrEmpty(test.EndTime) ? (DateTime?)null : Convert.ToDateTime(test.EndTime).ToUniversalTime(),
-                            Answer = test.CandidateAnswer
-                        }));
+                        //lstTestDetail.AddRange(catModel.CATAttemptedQuestionList.Select(test => new CandidateTestDetail
+                        //{
+                        //    CandidateTestId = model.CandidateTestId,
+                        //    QuestionId = test.QuestionId,
+                        //    StartTime = string.IsNullOrEmpty(test.StartTime) ? (DateTime?)null : Convert.ToDateTime(test.StartTime).ToUniversalTime(),
+                        //    EndTime = string.IsNullOrEmpty(test.EndTime) ? (DateTime?)null : Convert.ToDateTime(test.EndTime).ToUniversalTime(),
+                        //    Answer = test.CandidateAnswer
+                        //}));
 
-                        db.BulkInsert(lstTestDetail, 5000);
+                        //db.BulkInsert(lstTestDetail, 5000);
                         // save CandidateSchemeOfStudySubject  TotalTestAttempted properties as  subject wise of 
+
+                        foreach (var question in catModel.CATAttemptedQuestionList)
+                        {
+                            model.CandidateTestDetails.Add(new CandidateTestDetail
+                            {
+                                CandidateTestId = model.CandidateTestId,
+                                QuestionId = question.QuestionId,
+                                StartTime = string.IsNullOrEmpty(question.StartTime) ? (DateTime?)null : Convert.ToDateTime(question.StartTime).ToUniversalTime(),
+                                EndTime = string.IsNullOrEmpty(question.EndTime) ? (DateTime?)null : Convert.ToDateTime(question.EndTime).ToUniversalTime(),
+                                Answer = question.CandidateAnswer
+                            });
+                        }
                         db.SaveChanges();
 
 

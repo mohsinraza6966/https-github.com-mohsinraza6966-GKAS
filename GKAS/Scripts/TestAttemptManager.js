@@ -190,7 +190,8 @@ function TestAttemptFormManager() {
         }
         else {
             domElement.divTestResultLegend.hide();
-            if (domElement.hfTestType.val() == "CAT") {
+            //"CAT"
+            if (domElement.hfTestType.val() == "1") {
                 domElement.btnFirst.hide();
                 domElement.btnLast.hide();
                 domElement.btnPrev.hide();
@@ -290,8 +291,8 @@ function TestAttemptFormManager() {
 
         domElement.btnStartTest.off('click');
         domElement.btnStartTest.on('click', (function () {
-
-            if (domElement.hfTestType.val() == "CAT") {
+           // "CAT"
+            if (domElement.hfTestType.val() == "1") {
 
                 StartCatTest();
             } else {
@@ -488,9 +489,9 @@ function TestAttemptFormManager() {
         if (response && response.length > 0 && response[0]) {
 
             globalVar.TestAttemptViewModel = response[1];
-
+            debugger;
             // globalVar.TestAttemptViewModel = response[1];
-            globalVar.TotalQuestionCount = response[1].TestQuestionsList.length;
+            globalVar.TotalQuestionCount = response[1].TotalQuestions;
             globalVar.QuestionList = response[1].TestQuestionsList;
             CreateQuestionsNavigationPanel(globalVar.QuestionList, response[1].ShowSubjectGrouping, response[1].SingleSubjectName, false);
 
@@ -508,7 +509,8 @@ function TestAttemptFormManager() {
                 globalVar.TempStartTime = new Date();
                 globalVar.TempStartTime = globalVar.TempStartTime.toISOString();
 
-                if (domElement.hfTestType.val() == "CAT") {
+                //"CAT"
+                if (domElement.hfTestType.val() == "1") {
                     domElement.lblQuestionNumber.text("Question " + globalVar.CurrentCATQuestion + " of " + globalVar.TotalQuestionCount);
                     domElement.lblQuestionNumberShort.text(globalVar.CurrentCATQuestion + "/" + globalVar.TotalQuestionCount);
                 } else {
@@ -605,8 +607,9 @@ function TestAttemptFormManager() {
 
     function NextQuestion() {
 
-
-        if (domElement.hfTestType.val() == "CAT" && domElement.hfViewResult.val() != "result") {
+        //"CAT"
+        debugger
+        if (domElement.hfTestType.val() == "1" && domElement.hfViewResult.val() != "result") {
             GetQuestionForCAT();
         }
         else {
@@ -645,7 +648,7 @@ function TestAttemptFormManager() {
 
 
     function GetQuestionForCAT() {
-
+        debugger
         var questId = 0
         if (globalVar.QuestionList.length != 0) {
             questId = globalVar.QuestionList[0].QuestionId;
@@ -662,7 +665,7 @@ function TestAttemptFormManager() {
     }
 
     function GetQuestionForCATCallBack(response, param) {
-
+        debugger;
         if (response && response.length > 0 && response[0]) {
 
             globalVar.TestAttemptViewModel = response[1];
@@ -720,8 +723,13 @@ function TestAttemptFormManager() {
     }
 
     function FinishTest() {
-        SiteScript.CustomConfirmationBox("Are you sure, you want to finish this test ?", onFinishTestOkCallback, undefined, undefined, 'Finish');
-        //
+       // CustomConfirmationBox("Are you sure, you want to finish this test ?", onFinishTestOkCallback, undefined, undefined, 'Finish');
+
+        if (confirm("Are you sure, you want to finish this test ?") == true) {
+        onFinishTestOkCallback();
+        } else {
+            return;
+    }
     }
 
     function onFinishTestOkCallback() {
@@ -796,54 +804,7 @@ function TestAttemptFormManager() {
 
         var index = 1;
 
-        if (showSubjectGrouping) {
-            var grouped = Enumerable
-                .From(questionsCollection)
-                .GroupBy(
-                    function (QuestionList) { return QuestionList.SubjectName; }, // Key selector
-                    function (QuestionList) { return QuestionList; }, // Element selector
-                    function (SubjectName, grouping) { // Result selector
-                        return {
-                            SubjectName: SubjectName,
-                            QuestionList: grouping.source
-                        };
-                    })
-                .ToArray();
-
-
-            grouped.forEach(function (question) {
-
-                var subjectQuestions = question.QuestionList;
-                var subjectContainer = $("<div class='question-nav-subject-container'>");
-                var elSubjectName = $("<div class='question-nav-subject'>").text(question.SubjectName);
-                var elUnderLine = $("<hr class='hr-bottom-line-subject'>").appendTo(elSubjectName);
-
-                subjectContainer.append(elSubjectName);
-                domElement.divQuestionNavigationPanel.append(subjectContainer);
-
-                // iterate each question to make it clickable link //
-                subjectQuestions.forEach(function (objQuestion) {
-                    var questionLink = '';
-                    if (forResult) {
-                        questionLink = ReturnQuestionLinkWithResultStatus(objQuestion.QuestionAnswerStatus, objQuestion.QuestionId, index);
-                    }
-                    else {
-                        questionLink = $("<a class='question-number-nav-link question-number-nav' questionId='" + objQuestion.QuestionId + "'>").text(index);
-                    }
-
-                    questionLink.off('click');
-                    questionLink.on('click', (function () {
-                        ShowQuestionFromPanel(objQuestion.QuestionId);
-                    }));
-
-                    subjectContainer.append(questionLink);
-                    index++;
-
-                });
-
-            });
-        }
-        else {
+        if (questionsCollection.length > 0) {
             var subjectQuestions = questionsCollection;
 
             var subjectContainer = $("<div class='question-nav-subject-container'>");
@@ -873,7 +834,6 @@ function TestAttemptFormManager() {
                 index++;
             });
         }
-
         //appendQuestionNavigationPanelInSiteMenu();
     }
 
@@ -901,7 +861,7 @@ function TestAttemptFormManager() {
             UserId: userId,
             TestId: testId,
             //SOSId: SoSId,
-            CandidateSOSId: CandidateSOSId,
+            //CandidateSOSId: CandidateSOSId,
             StartTime: testStartTime,
             EndTime: testEndTime,
             AttemptedQuestionList: []
@@ -919,7 +879,8 @@ function TestAttemptFormManager() {
 
         });
 
-        if (domElement.hfTestType.val() == "CAT") {
+        //"CAT"
+        if (domElement.hfTestType.val() =="1" ) {
             var questId = 0
             if (globalVar.QuestionList.length != 0) {
                 questId = globalVar.QuestionList[0].QuestionId;
@@ -981,7 +942,7 @@ function TestAttemptFormManager() {
 
         appendQuestionNavigationPanelInSiteMenu();
 
-        SiteScript.ChangeNavigationMenuState(true);
+        //SiteScript.ChangeNavigationMenuState(true);
 
         AdjustContainersWidthAndHeight();
 
@@ -1512,7 +1473,7 @@ function TestAttemptFormManager() {
     function UpdateRemainingQuestions() {
         var remainingQuestions = 0;
         var text = '';
-        if (domElement.hfTestType.val() == "CAT" && domElement.hfViewResult.val() != "result") {
+        if (domElement.hfTestType.val() == "1" && domElement.hfViewResult.val() != "result") {
             remainingQuestions = globalVar.TotalQuestionCount - globalVar.CurrentCATQuestion;
             text = remainingQuestions.toString();
             domElement.divRemainingQuestions.text(text);
@@ -1586,7 +1547,7 @@ function TestAttemptFormManager() {
 
             // If the count down is over, write some text 
             if (distance < 0) {
-                SiteScript.CustomConfirmationBoxClose();
+               CustomConfirmationBoxClose();
                 onFinishTestOkCallback();
                 clearInterval(interval);
             }
@@ -1731,6 +1692,66 @@ function TestAttemptFormManager() {
             }
         });
         domElement.TestResultPieChart.data('kendoChart').redraw();
+    }
+    function CustomConfirmationBox (message, onOkCallback, onCancelCallback, customData, confirmButtonTitle, cancelButtonTitle) {
+
+        var kendoWindow = $("<div />").kendoWindow({
+            title: "Confirm",
+            resizable: false,
+            modal: true
+        });
+
+        this.globalVar.kendoWindowElement = kendoWindow.data("kendoWindow");
+
+        this.globalVar.kendoWindowElement
+            .content($("#confirmationBox").html())
+            .center().open();
+
+
+
+        if (confirmButtonTitle) {
+
+            kendoWindow.find(".confirmation-ok-button").text(confirmButtonTitle);
+        }
+
+        if (cancelButtonTitle) {
+
+            kendoWindow.find(".confirmation-cancel-button").text(cancelButtonTitle);
+        }
+        // Set confirmation message 
+
+        $(".confirmation-message").text(message);
+
+        // return kendoWindow;
+
+
+        kendoWindow
+            .find(".confirmation-ok-button,.confirmation-cancel-button")
+            .click(function () {
+
+                if ($(this).hasClass("confirmation-ok-button")) {
+                    // alert("Deleting record...");
+
+                    if (onOkCallback) {
+                        onOkCallback(customData);
+                    }
+                }
+                else {
+                    if (onCancelCallback) {
+                        onCancelCallback(customData);
+                    }
+                }
+
+                SiteScript.globalVar.kendoWindowElement.close();
+
+            });
+
+    }
+
+    function CustomConfirmationBoxClose() {
+        if (this.globalVar.kendoWindowElement) {
+            this.globalVar.kendoWindowElement.close();
+        }
     }
 
 }
