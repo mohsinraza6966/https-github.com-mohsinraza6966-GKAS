@@ -203,6 +203,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\fontawesome-all.css" />
+    <Content Include="Content\fontawesome-all.min.css" />
     <Content Include="Content\images\accuracy.svg" />
     <Content Include="Content\images\biology.svg" />
     <Content Include="Content\images\correct.svg" />
@@ -245,7 +249,9 @@
     <Content Include="Content\kendo\web\Material\sprite_kpi_2x.png" />
     <Content Include="Content\site.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\vjs.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\AppConstants.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -276,6 +282,18 @@
     <Content Include="fonts\poppins\Poppins-Medium.ttf" />
     <Content Include="fonts\poppins\Poppins-Regular.ttf" />
     <Content Include="fonts\poppins\Poppins-SemiBold.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\vjs.eot" />
+    <Content Include="fonts\vjs.ttf" />
+    <Content Include="fonts\vjs.woff" />
+    <Content Include="webfonts\fa-brands-400.svg" />
+    <Content Include="webfonts\fa-light-300.svg" />
+    <Content Include="webfonts\fa-regular-400.svg" />
+    <Content Include="webfonts\fa-solid-900.svg" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\countdowntimer.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -472,6 +490,22 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Shared\_CommonHtml.cshtml" />
     <Content Include="Views\Test\Attempt.cshtml" />
+    <Content Include="webfonts\fa-brands-400.eot" />
+    <Content Include="webfonts\fa-brands-400.ttf" />
+    <Content Include="webfonts\fa-brands-400.woff" />
+    <Content Include="webfonts\fa-brands-400.woff2" />
+    <Content Include="webfonts\fa-light-300.eot" />
+    <Content Include="webfonts\fa-light-300.ttf" />
+    <Content Include="webfonts\fa-light-300.woff" />
+    <Content Include="webfonts\fa-light-300.woff2" />
+    <Content Include="webfonts\fa-regular-400.eot" />
+    <Content Include="webfonts\fa-regular-400.ttf" />
+    <Content Include="webfonts\fa-regular-400.woff" />
+    <Content Include="webfonts\fa-regular-400.woff2" />
+    <Content Include="webfonts\fa-solid-900.eot" />
+    <Content Include="webfonts\fa-solid-900.ttf" />
+    <Content Include="webfonts\fa-solid-900.woff" />
+    <Content Include="webfonts\fa-solid-900.woff2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
