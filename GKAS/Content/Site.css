@@ -1787,7 +1787,7 @@ Width edit to fix the layout in standard resolutions
 }
 
 .custom-radio {
-    display: none;
+   display: none;
 }
 
 .bg-gradient .custom-radio + label {
@@ -5660,6 +5660,7 @@ hr {
     background: #fff;
     position: relative;
     /*margin: auto;*/
+    height : 350px;
     margin-bottom: 12px;
     box-shadow: -2px 4px 12px 0px #dedede;
     padding: 20px;
@@ -5951,11 +5952,11 @@ hr {
     }
 
         .question-option-box .option-value label {
-            position: relative;
+           /* position: relative;
             top: 1px;
             left: 1px;
             margin-right: 1px !important;
-            padding: 0px 0px 0px 0px !important;
+            padding: 0px 0px 0px 0px !important;*/
         }
 
 .test-result-container {

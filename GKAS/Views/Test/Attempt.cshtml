@@ -117,7 +117,7 @@
                 <div class="test-attempt-question-header">
 
                 </div>
-                <div class="test-attempt-question-body">
+                <div class="test-attempt-question-body" style="max-height :300px">
 
 
                     <div id="divQuestionBody" class="question-detail"></div>
@@ -230,6 +230,7 @@
                     </div>
                     <div class="col-md-2 no-padding test-back-btn">
                         <a id="lnkBtnBack" class="btn btn-kips">BACK</a>
+                        @Html.Hidden("hdnBackUrl", Url.Action("Index", "Test"))
 
 
                     </div>
