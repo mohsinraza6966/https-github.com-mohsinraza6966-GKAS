@@ -893,7 +893,7 @@ function TestAttemptFormManager() {
             candidateAttemptedTest.CATCandidateAnswer = candidateAnswer;
         }
 
-        ServiceManager.Post(actionUrl, JSON.stringify(globalVar.TestAttemptViewModel), true, SaveCandidateTestCallBack, testId, null, true);
+        //ServiceManager.Post(actionUrl, JSON.stringify(globalVar.TestAttemptViewModel), true, SaveCandidateTestCallBack, testId, null, true);
 
         ServiceManager.Post(actionUrl, JSON.stringify(candidateAttemptedTest), true, SaveCandidateTestCallBack, testId, null, true, "Saving test...");
     }
