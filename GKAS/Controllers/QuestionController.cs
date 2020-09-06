@@ -49,7 +49,7 @@ namespace GKAS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "QuestionId,SubjectId,Body,OptionA,OptionB,OptionC,OptionD,OptionE,Description,Hint,Answer,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate")] Question question)
+        public ActionResult Create([Bind(Include = "QuestionId,SubjectId,Body,OptionA,OptionB,OptionC,OptionD,OptionE,Description,Hint,Answer,DifficultyLevel,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace GKAS.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "QuestionId,SubjectId,Body,OptionA,OptionB,OptionC,OptionD,OptionE,Description,Hint,Answer,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate")] Question question)
+        public ActionResult Edit([Bind(Include = "QuestionId,SubjectId,Body,OptionA,OptionB,OptionC,OptionD,OptionE,Description,Hint,Answer,DifficultyLevel,Status,CreatedBy,CreatedDate,ModifiedBy,ModifiedDate")] Question question)
         {
             if (ModelState.IsValid)
             {

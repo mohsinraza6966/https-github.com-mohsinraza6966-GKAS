@@ -70,7 +70,7 @@
           <Key>
             <PropertyRef Name="CandidateTestId" />
           </Key>
-          <Property Name="CandidateTestId" Type="bigint" Nullable="false" />
+          <Property Name="CandidateTestId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="bigint" Nullable="false" />
           <Property Name="TestId" Type="bigint" Nullable="false" />
           <Property Name="StartTime" Type="datetime" />
@@ -83,15 +83,11 @@
           <Property Name="TotalQuestion" Type="int" />
           <Property Name="AverageQuestionTime" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CandidateTestDetail">
           <Key>
             <PropertyRef Name="CandidateTestDetailId" />
-            <PropertyRef Name="CandidateTestId" />
-            <PropertyRef Name="QuestionId" />
           </Key>
-          <Property Name="CandidateTestDetailId" Type="bigint" Nullable="false" />
+          <Property Name="CandidateTestDetailId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CandidateTestId" Type="bigint" Nullable="false" />
           <Property Name="QuestionId" Type="bigint" Nullable="false" />
           <Property Name="Answer" Type="nvarchar" MaxLength="50" />
@@ -113,6 +109,7 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Hint" Type="nvarchar(max)" />
           <Property Name="Answer" Type="nchar" MaxLength="10" />
+          <Property Name="DifficultyLevel" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="bigint" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -145,6 +142,47 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="ModifiedBy" Type="bigint" />
           <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TestConfiguration">
+          <Key>
+            <PropertyRef Name="TestConfigId" />
+          </Key>
+          <Property Name="TestConfigId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="StartDifficultyLevel" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="StartDecissionCount" Type="int" Nullable="false" />
+          <Property Name="StartDecissionPercentage" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestConfigurationDetail">
+          <Key>
+            <PropertyRef Name="TestConfigDetailId" />
+          </Key>
+          <Property Name="TestConfigDetailId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestConfigId" Type="int" Nullable="false" />
+          <Property Name="DifficultyLevel" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="DecissionCount" Type="int" Nullable="false" />
+          <Property Name="DecissionPercentage" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GKAS.dbo.CandidateTestScoreView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CandidateTestScoreView">
+          <Key>
+            <PropertyRef Name="CandidateTestDetailId" />
+            <PropertyRef Name="CandidateTestId" />
+            <PropertyRef Name="QuestionId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="AnswerResult" />
+          </Key>
+          <Property Name="CandidateTestDetailId" Type="bigint" Nullable="false" />
+          <Property Name="CandidateTestId" Type="bigint" Nullable="false" />
+          <Property Name="QuestionId" Type="bigint" Nullable="false" />
+          <Property Name="Answer" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserId" Type="bigint" Nullable="false" />
+          <Property Name="TotalScore" Type="int" />
+          <Property Name="ObtainScore" Type="decimal" Precision="12" Scale="2" />
+          <Property Name="AnswerResult" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <Association Name="FK_CandidateTest_AspNetUsers">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
@@ -191,6 +229,18 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
             </Principal>
             <Dependent Role="CandidateTestDetail">
               <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CatConfigDetail_CatConfiguration">
+          <End Role="TestConfiguration" Type="Self.TestConfiguration" Multiplicity="1" />
+          <End Role="TestConfigurationDetail" Type="Self.TestConfigurationDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestConfiguration">
+              <PropertyRef Name="TestConfigId" />
+            </Principal>
+            <Dependent Role="TestConfigurationDetail">
+              <PropertyRef Name="TestConfigId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -274,6 +324,20 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CandidateTestResult_Get" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TestId" Type="bigint" Mode="In" />
+          <Parameter Name="UserId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="CandidateTestResultDetail_Get" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TestId" Type="bigint" Mode="In" />
+          <Parameter Name="UserId" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="CATConfigurationDetail_Get" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TestConfigId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CATQuestion_Get" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TestId" Type="bigint" Mode="In" />
+        </Function>
         <EntityContainer Name="GKASModelStoreContainer">
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -282,18 +346,23 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CandidateTest" EntityType="Self.CandidateTest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CandidateTestDetail" EntityType="Self.CandidateTestDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Subject" EntityType="Self.Subject" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Test" EntityType="Self.Test" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="CandidateTestDetail" EntityType="Self.CandidateTestDetail" store:Type="Tables" store:Schema="dbo">
+          <EntitySet Name="TestConfiguration" EntityType="Self.TestConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestConfigurationDetail" EntityType="Self.TestConfigurationDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CandidateTestScoreView" EntityType="Self.CandidateTestScoreView" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-    [CandidateTestDetail].[CandidateTestDetailId] AS [CandidateTestDetailId], 
-    [CandidateTestDetail].[CandidateTestId] AS [CandidateTestId], 
-    [CandidateTestDetail].[QuestionId] AS [QuestionId], 
-    [CandidateTestDetail].[Answer] AS [Answer], 
-    [CandidateTestDetail].[StartTime] AS [StartTime], 
-    [CandidateTestDetail].[EndTime] AS [EndTime]
-    FROM [dbo].[CandidateTestDetail] AS [CandidateTestDetail]</DefiningQuery>
+    [CandidateTestScoreView].[CandidateTestDetailId] AS [CandidateTestDetailId], 
+    [CandidateTestScoreView].[CandidateTestId] AS [CandidateTestId], 
+    [CandidateTestScoreView].[QuestionId] AS [QuestionId], 
+    [CandidateTestScoreView].[Answer] AS [Answer], 
+    [CandidateTestScoreView].[UserId] AS [UserId], 
+    [CandidateTestScoreView].[TotalScore] AS [TotalScore], 
+    [CandidateTestScoreView].[ObtainScore] AS [ObtainScore], 
+    [CandidateTestScoreView].[AnswerResult] AS [AnswerResult]
+    FROM [dbo].[CandidateTestScoreView] AS [CandidateTestScoreView]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_CandidateTest_AspNetUsers" Association="Self.FK_CandidateTest_AspNetUsers">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -310,6 +379,10 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <AssociationSet Name="FK_CandidateTestDetail_Question" Association="Self.FK_CandidateTestDetail_Question">
             <End Role="Question" EntitySet="Question" />
             <End Role="CandidateTestDetail" EntitySet="CandidateTestDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CatConfigDetail_CatConfiguration" Association="Self.FK_CatConfigDetail_CatConfiguration">
+            <End Role="TestConfiguration" EntitySet="TestConfiguration" />
+            <End Role="TestConfigurationDetail" EntitySet="TestConfigurationDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -397,28 +470,8 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
-          <NavigationProperty Name="CandidateTests" Relationship="Self.FK_CandidateTest_AspNetUsers" FromRole="AspNetUsers" ToRole="CandidateTest" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
-        </EntityType>
-        <EntityType Name="CandidateTest">
-          <Key>
-            <PropertyRef Name="CandidateTestId" />
-          </Key>
-          <Property Name="CandidateTestId" Type="Int64" Nullable="false" />
-          <Property Name="UserId" Type="Int64" Nullable="false" />
-          <Property Name="TestId" Type="Int64" Nullable="false" />
-          <Property Name="StartTime" Type="DateTime" Precision="3" />
-          <Property Name="EndTime" Type="DateTime" Precision="3" />
-          <Property Name="TotalScore" Type="Int32" />
-          <Property Name="ObtainScore" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="TotalCorrect" Type="Int32" />
-          <Property Name="TotalIncorrect" Type="Int32" />
-          <Property Name="TotalUnattempted" Type="Int32" />
-          <Property Name="TotalQuestion" Type="Int32" />
-          <Property Name="AverageQuestionTime" Type="Int32" />
-          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_CandidateTest_AspNetUsers" FromRole="CandidateTest" ToRole="AspNetUsers" />
-          <NavigationProperty Name="CandidateTestDetails" Relationship="Self.FK_CandidateTestDetail_CandidateTest" FromRole="CandidateTest" ToRole="CandidateTestDetail" />
-          <NavigationProperty Name="Test" Relationship="GKASModel.FK_CandidateTest_Test" FromRole="CandidateTest" ToRole="Test" />
+          <NavigationProperty Name="CandidateTests" Relationship="GKASModel.FK_CandidateTest_AspNetUsers" FromRole="AspNetUser" ToRole="CandidateTest" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -440,8 +493,9 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedBy" Type="Int64" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="CandidateTestDetails" Relationship="Self.FK_CandidateTestDetail_Question" FromRole="Question" ToRole="CandidateTestDetail" />
           <NavigationProperty Name="Subject" Relationship="Self.FK_Question_Subject" FromRole="Question" ToRole="Subject" />
+          <Property Name="DifficultyLevel" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CandidateTestDetails" Relationship="GKASModel.FK_CandidateTestDetail_Question" FromRole="Question" ToRole="CandidateTestDetail" />
         </EntityType>
         <EntityType Name="Subject">
           <Key>
@@ -455,22 +509,24 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <Property Name="ModifiedBy" Type="Int64" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Questions" Relationship="Self.FK_Question_Subject" FromRole="Subject" ToRole="Question" />
-          <NavigationProperty Name="Tests" Relationship="GKASModel.FK_Test_Subject" FromRole="Subject" ToRole="Test" />
+          <NavigationProperty Name="Tests" Relationship="Self.FK_Test_Subject" FromRole="Subject" ToRole="Test" />
         </EntityType>
-        <EntityType Name="CandidateTestDetail">
+        <EntityType Name="Test">
           <Key>
-            <PropertyRef Name="CandidateTestDetailId" />
-            <PropertyRef Name="CandidateTestId" />
-            <PropertyRef Name="QuestionId" />
+            <PropertyRef Name="TestId" />
           </Key>
-          <Property Name="CandidateTestDetailId" Type="Int64" Nullable="false" />
-          <Property Name="CandidateTestId" Type="Int64" Nullable="false" />
-          <Property Name="QuestionId" Type="Int64" Nullable="false" />
-          <Property Name="Answer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="StartTime" Type="DateTime" Precision="3" />
-          <Property Name="EndTime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="CandidateTest" Relationship="Self.FK_CandidateTestDetail_CandidateTest" FromRole="CandidateTestDetail" ToRole="CandidateTest" />
-          <NavigationProperty Name="Question" Relationship="Self.FK_CandidateTestDetail_Question" FromRole="CandidateTestDetail" ToRole="Question" />
+          <Property Name="TestId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SubjectId" Type="Int64" Nullable="false" />
+          <Property Name="QuestionCount" Type="Int32" Nullable="false" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int64" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Int64" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Subject" Relationship="Self.FK_Test_Subject" FromRole="Test" ToRole="Subject" />
+          <NavigationProperty Name="CandidateTests" Relationship="GKASModel.FK_CandidateTest_Test" FromRole="Test" ToRole="CandidateTest" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
@@ -500,42 +556,6 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_CandidateTest_AspNetUsers">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
-          <End Role="CandidateTest" Type="Self.CandidateTest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CandidateTest">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CandidateTestDetail_CandidateTest">
-          <End Role="CandidateTest" Type="Self.CandidateTest" Multiplicity="1" />
-          <End Role="CandidateTestDetail" Type="Self.CandidateTestDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CandidateTest">
-              <PropertyRef Name="CandidateTestId" />
-            </Principal>
-            <Dependent Role="CandidateTestDetail">
-              <PropertyRef Name="CandidateTestId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CandidateTestDetail_Question">
-          <End Role="Question" Type="Self.Question" Multiplicity="1" />
-          <End Role="CandidateTestDetail" Type="Self.CandidateTestDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Question">
-              <PropertyRef Name="QuestionId" />
-            </Principal>
-            <Dependent Role="CandidateTestDetail">
-              <PropertyRef Name="QuestionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Question_Subject">
           <End Role="Subject" Type="Self.Subject" Multiplicity="1" />
           <End Role="Question" Type="Self.Question" Multiplicity="*" />
@@ -544,6 +564,18 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
               <PropertyRef Name="SubjectId" />
             </Principal>
             <Dependent Role="Question">
+              <PropertyRef Name="SubjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Test_Subject">
+          <End Role="Subject" Type="Self.Subject" Multiplicity="1" />
+          <End Role="Test" Type="Self.Test" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="SubjectId" />
+            </Principal>
+            <Dependent Role="Test">
               <PropertyRef Name="SubjectId" />
             </Dependent>
           </ReferentialConstraint>
@@ -558,10 +590,9 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
-          <EntitySet Name="CandidateTests" EntityType="Self.CandidateTest" />
           <EntitySet Name="Questions" EntityType="Self.Question" />
           <EntitySet Name="Subjects" EntityType="Self.Subject" />
-          <EntitySet Name="CandidateTestDetails" EntityType="Self.CandidateTestDetail" />
+          <EntitySet Name="Tests" EntityType="Self.Test" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -570,53 +601,200 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="FK_CandidateTest_AspNetUsers" Association="Self.FK_CandidateTest_AspNetUsers">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="CandidateTest" EntitySet="CandidateTests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CandidateTestDetail_CandidateTest" Association="Self.FK_CandidateTestDetail_CandidateTest">
-            <End Role="CandidateTest" EntitySet="CandidateTests" />
-            <End Role="CandidateTestDetail" EntitySet="CandidateTestDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_CandidateTestDetail_Question" Association="Self.FK_CandidateTestDetail_Question">
-            <End Role="Question" EntitySet="Questions" />
-            <End Role="CandidateTestDetail" EntitySet="CandidateTestDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_Question_Subject" Association="Self.FK_Question_Subject">
             <End Role="Subject" EntitySet="Subjects" />
             <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Test_Subject" Association="Self.FK_Test_Subject">
+            <End Role="Subject" EntitySet="Subjects" />
+            <End Role="Test" EntitySet="Tests" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <EntitySet Name="Tests" EntityType="GKASModel.Test" />
+          <EntitySet Name="TestConfigurations" EntityType="GKASModel.TestConfiguration" />
+          <EntitySet Name="TestConfigurationDetails" EntityType="GKASModel.TestConfigurationDetail" />
+          <EntitySet Name="CandidateTestScoreViews" EntityType="GKASModel.CandidateTestScoreView" />
+          <AssociationSet Name="FK_CatConfigDetail_CatConfiguration" Association="GKASModel.FK_CatConfigDetail_CatConfiguration">
+            <End Role="TestConfiguration" EntitySet="TestConfigurations" />
+            <End Role="TestConfigurationDetail" EntitySet="TestConfigurationDetails" />
+          </AssociationSet>
+          <FunctionImport Name="CandidateTestResult_Get" ReturnType="Collection(GKASModel.CandidateTestResult_Get_Result)">
+            <Parameter Name="TestId" Mode="In" Type="Int64" />
+            <Parameter Name="UserId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="CandidateTestResultDetail_Get" ReturnType="Collection(GKASModel.CandidateTestResultDetail_Get_Result)">
+            <Parameter Name="TestId" Mode="In" Type="Int64" />
+            <Parameter Name="UserId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="CATConfigurationDetail_Get" ReturnType="Collection(GKASModel.CATConfigurationDetail_Get_Result)">
+          <Parameter Name="TestConfigId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CATQuestion_Get" ReturnType="Collection(GKASModel.CATQuestion_Get_Result)">
+          <Parameter Name="TestId" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <EntitySet Name="CandidateTests" EntityType="GKASModel.CandidateTest" />
+          <AssociationSet Name="FK_CandidateTest_AspNetUsers" Association="GKASModel.FK_CandidateTest_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="CandidateTest" EntitySet="CandidateTests" />
+          </AssociationSet>
           <AssociationSet Name="FK_CandidateTest_Test" Association="GKASModel.FK_CandidateTest_Test">
             <End Role="Test" EntitySet="Tests" />
             <End Role="CandidateTest" EntitySet="CandidateTests" />
           </AssociationSet>
-          <AssociationSet Name="FK_Test_Subject" Association="GKASModel.FK_Test_Subject">
-            <End Role="Subject" EntitySet="Subjects" />
-            <End Role="Test" EntitySet="Tests" />
+          <EntitySet Name="CandidateTestDetails" EntityType="GKASModel.CandidateTestDetail" />
+          <AssociationSet Name="FK_CandidateTestDetail_CandidateTest" Association="GKASModel.FK_CandidateTestDetail_CandidateTest">
+            <End Role="CandidateTest" EntitySet="CandidateTests" />
+            <End Role="CandidateTestDetail" EntitySet="CandidateTestDetails" />
           </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Test">
+          <AssociationSet Name="FK_CandidateTestDetail_Question" Association="GKASModel.FK_CandidateTestDetail_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="CandidateTestDetail" EntitySet="CandidateTestDetails" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="TestConfiguration">
           <Key>
-            <PropertyRef Name="TestId" />
+            <PropertyRef Name="TestConfigId" />
           </Key>
-          <Property Name="TestId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SubjectId" Type="Int64" Nullable="false" />
-          <Property Name="QuestionCount" Type="Int32" Nullable="false" />
-          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="TestConfigId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="CandidateTests" Relationship="GKASModel.FK_CandidateTest_Test" FromRole="Test" ToRole="CandidateTest" />
-          <NavigationProperty Name="Subject" Relationship="GKASModel.FK_Test_Subject" FromRole="Test" ToRole="Subject" />
+          <Property Name="StartDifficultyLevel" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StartDecissionCount" Type="Int32" Nullable="false" />
+          <Property Name="StartDecissionPercentage" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TestConfigurationDetails" Relationship="GKASModel.FK_CatConfigDetail_CatConfiguration" FromRole="TestConfiguration" ToRole="TestConfigurationDetail" />
         </EntityType>
+        <EntityType Name="TestConfigurationDetail">
+          <Key>
+            <PropertyRef Name="TestConfigDetailId" />
+          </Key>
+          <Property Name="TestConfigDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestConfigId" Type="Int32" Nullable="false" />
+          <Property Name="DifficultyLevel" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DecissionCount" Type="Int32" Nullable="false" />
+          <Property Name="DecissionPercentage" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TestConfiguration" Relationship="GKASModel.FK_CatConfigDetail_CatConfiguration" FromRole="TestConfigurationDetail" ToRole="TestConfiguration" />
+        </EntityType>
+        <EntityType Name="CandidateTestScoreView">
+          <Key>
+            <PropertyRef Name="CandidateTestDetailId" />
+            <PropertyRef Name="CandidateTestId" />
+            <PropertyRef Name="QuestionId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="AnswerResult" />
+          </Key>
+          <Property Name="CandidateTestDetailId" Type="Int64" Nullable="false" />
+          <Property Name="CandidateTestId" Type="Int64" Nullable="false" />
+          <Property Name="QuestionId" Type="Int64" Nullable="false" />
+          <Property Name="Answer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="TotalScore" Type="Int32" />
+          <Property Name="ObtainScore" Type="Decimal" Precision="12" Scale="2" />
+          <Property Name="AnswerResult" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_CatConfigDetail_CatConfiguration">
+          <End Type="GKASModel.TestConfiguration" Role="TestConfiguration" Multiplicity="1" />
+          <End Type="GKASModel.TestConfigurationDetail" Role="TestConfigurationDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestConfiguration">
+              <PropertyRef Name="TestConfigId" />
+            </Principal>
+            <Dependent Role="TestConfigurationDetail">
+              <PropertyRef Name="TestConfigId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="CandidateTestResult_Get_Result">
+          <Property Type="String" Name="SubjectName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Icon" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="Color" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="Score" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Percentage" Nullable="true" Precision="5" Scale="2" />
+          <Property Type="Int32" Name="NotAttempted" Nullable="true" />
+          <Property Type="Int32" Name="CorrectQuestions" Nullable="true" />
+          <Property Type="Int32" Name="WrongQuestions" Nullable="true" />
+          <Property Type="Int32" Name="TotalMarks" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CandidateTestResultDetail_Get_Result">
+          <Property Type="Int64" Name="QuestionId" Nullable="false" />
+          <Property Type="String" Name="QuestionBody" Nullable="false" />
+          <Property Type="String" Name="OptionA" Nullable="false" />
+          <Property Type="String" Name="OptionB" Nullable="false" />
+          <Property Type="String" Name="OptionC" Nullable="true" />
+          <Property Type="String" Name="OptionD" Nullable="true" />
+          <Property Type="String" Name="OptionE" Nullable="true" />
+          <Property Type="String" Name="CorrectAnswer" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Hint" Nullable="true" />
+          <Property Type="Int32" Name="OptionCount" Nullable="true" />
+          <Property Type="String" Name="Subject" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Answer" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="QuestionAnswerStatus" Nullable="true" MaxLength="14" />
+          <Property Type="String" Name="Explanation" Nullable="true" />
+          <Property Type="Int64" Name="TestSubjectId" Nullable="false" />
+          <Property Type="DateTime" Name="StartTime" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="EndTime" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="SortOrder" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CATConfigurationDetail_Get_Result">
+          <Property Type="Int64" Name="rowIndex" Nullable="true" />
+          <Property Type="Int32" Name="TestConfigId" Nullable="false" />
+          <Property Type="String" Name="DifficultyLevel" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="DecissionCount" Nullable="false" />
+          <Property Type="Int32" Name="DecissionPercentage" Nullable="false" />
+          <Property Type="Int32" Name="Currentlevel" Nullable="false" />
+          <Property Type="Int32" Name="StartLevel" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="CATQuestion_Get_Result">
+          <Property Type="Int64" Name="QuestionId" Nullable="false" />
+          <Property Type="String" Name="QuestionBody" Nullable="false" />
+          <Property Type="String" Name="Explanation" Nullable="true" />
+          <Property Type="String" Name="CorrectAnswer" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="AnswerType" Nullable="true" />
+          <Property Type="String" Name="OptionA" Nullable="false" />
+          <Property Type="String" Name="OptionB" Nullable="false" />
+          <Property Type="String" Name="OptionC" Nullable="true" />
+          <Property Type="String" Name="OptionD" Nullable="true" />
+          <Property Type="String" Name="OptionE" Nullable="true" />
+          <Property Type="Int32" Name="OptionCount" Nullable="true" />
+          <Property Type="String" Name="Hint" Nullable="true" />
+          <Property Type="Int32" Name="DifficultyLevel" Nullable="false" />
+          <Property Type="Int64" Name="TopicId" Nullable="false" />
+          <Property Type="String" Name="SubjectName" Nullable="false" MaxLength="1" />
+        </ComplexType>
+        <EntityType Name="CandidateTest">
+          <Key>
+            <PropertyRef Name="CandidateTestId" />
+          </Key>
+          <Property Name="CandidateTestId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int64" Nullable="false" />
+          <Property Name="TestId" Type="Int64" Nullable="false" />
+          <Property Name="StartTime" Type="DateTime" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Precision="3" />
+          <Property Name="TotalScore" Type="Int32" />
+          <Property Name="ObtainScore" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalCorrect" Type="Int32" />
+          <Property Name="TotalIncorrect" Type="Int32" />
+          <Property Name="TotalUnattempted" Type="Int32" />
+          <Property Name="TotalQuestion" Type="Int32" />
+          <Property Name="AverageQuestionTime" Type="Int32" />
+          <NavigationProperty Name="AspNetUser" Relationship="GKASModel.FK_CandidateTest_AspNetUsers" FromRole="CandidateTest" ToRole="AspNetUser" />
+          <NavigationProperty Name="Test" Relationship="GKASModel.FK_CandidateTest_Test" FromRole="CandidateTest" ToRole="Test" />
+          <NavigationProperty Name="CandidateTestDetails" Relationship="GKASModel.FK_CandidateTestDetail_CandidateTest" FromRole="CandidateTest" ToRole="CandidateTestDetail" />
+        </EntityType>
+        <Association Name="FK_CandidateTest_AspNetUsers">
+          <End Type="GKASModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="GKASModel.CandidateTest" Role="CandidateTest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CandidateTest">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CandidateTest_Test">
           <End Type="GKASModel.Test" Role="Test" Multiplicity="1" />
           <End Type="GKASModel.CandidateTest" Role="CandidateTest" Multiplicity="*" />
@@ -629,19 +807,44 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Test_Subject">
-          <End Type="GKASModel.Subject" Role="Subject" Multiplicity="1" />
-          <End Type="GKASModel.Test" Role="Test" Multiplicity="*" />
+        <EntityType Name="CandidateTestDetail">
+          <Key>
+            <PropertyRef Name="CandidateTestDetailId" />
+          </Key>
+          <Property Name="CandidateTestDetailId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CandidateTestId" Type="Int64" Nullable="false" />
+          <Property Name="QuestionId" Type="Int64" Nullable="false" />
+          <Property Name="Answer" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StartTime" Type="DateTime" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CandidateTest" Relationship="GKASModel.FK_CandidateTestDetail_CandidateTest" FromRole="CandidateTestDetail" ToRole="CandidateTest" />
+          <NavigationProperty Name="Question" Relationship="GKASModel.FK_CandidateTestDetail_Question" FromRole="CandidateTestDetail" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK_CandidateTestDetail_CandidateTest">
+          <End Type="GKASModel.CandidateTest" Role="CandidateTest" Multiplicity="1" />
+          <End Type="GKASModel.CandidateTestDetail" Role="CandidateTestDetail" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Subject">
-              <PropertyRef Name="SubjectId" />
+            <Principal Role="CandidateTest">
+              <PropertyRef Name="CandidateTestId" />
             </Principal>
-            <Dependent Role="Test">
-              <PropertyRef Name="SubjectId" />
+            <Dependent Role="CandidateTestDetail">
+              <PropertyRef Name="CandidateTestId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_CandidateTestDetail_Question">
+          <End Type="GKASModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="GKASModel.CandidateTestDetail" Role="CandidateTestDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="CandidateTestDetail">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -702,27 +905,10 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CandidateTests">
-            <EntityTypeMapping TypeName="GKASModel.CandidateTest">
-              <MappingFragment StoreEntitySet="CandidateTest">
-                <ScalarProperty Name="CandidateTestId" ColumnName="CandidateTestId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="TestId" ColumnName="TestId" />
-                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
-                <ScalarProperty Name="TotalScore" ColumnName="TotalScore" />
-                <ScalarProperty Name="ObtainScore" ColumnName="ObtainScore" />
-                <ScalarProperty Name="TotalCorrect" ColumnName="TotalCorrect" />
-                <ScalarProperty Name="TotalIncorrect" ColumnName="TotalIncorrect" />
-                <ScalarProperty Name="TotalUnattempted" ColumnName="TotalUnattempted" />
-                <ScalarProperty Name="TotalQuestion" ColumnName="TotalQuestion" />
-                <ScalarProperty Name="AverageQuestionTime" ColumnName="AverageQuestionTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Questions">
             <EntityTypeMapping TypeName="GKASModel.Question">
               <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="DifficultyLevel" ColumnName="DifficultyLevel" />
                 <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
                 <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
                 <ScalarProperty Name="Body" ColumnName="Body" />
@@ -755,15 +941,19 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CandidateTestDetails">
-            <EntityTypeMapping TypeName="GKASModel.CandidateTestDetail">
-              <MappingFragment StoreEntitySet="CandidateTestDetail">
-                <ScalarProperty Name="CandidateTestDetailId" ColumnName="CandidateTestDetailId" />
-                <ScalarProperty Name="CandidateTestId" ColumnName="CandidateTestId" />
-                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
-                <ScalarProperty Name="Answer" ColumnName="Answer" />
-                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+          <EntitySetMapping Name="Tests">
+            <EntityTypeMapping TypeName="GKASModel.Test">
+              <MappingFragment StoreEntitySet="Test">
+                <ScalarProperty Name="TestId" ColumnName="TestId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -775,19 +965,144 @@ warning 6002: The table/view 'GKAS.dbo.CandidateTestDetail' does not have a prim
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="Tests">
-            <EntityTypeMapping TypeName="GKASModel.Test">
-              <MappingFragment StoreEntitySet="Test">
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+          <EntitySetMapping Name="TestConfigurations">
+            <EntityTypeMapping TypeName="GKASModel.TestConfiguration">
+              <MappingFragment StoreEntitySet="TestConfiguration">
+                <ScalarProperty Name="StartDecissionPercentage" ColumnName="StartDecissionPercentage" />
+                <ScalarProperty Name="StartDecissionCount" ColumnName="StartDecissionCount" />
+                <ScalarProperty Name="StartDifficultyLevel" ColumnName="StartDifficultyLevel" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Duration" ColumnName="Duration" />
-                <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
-                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TestConfigId" ColumnName="TestConfigId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestConfigurationDetails">
+            <EntityTypeMapping TypeName="GKASModel.TestConfigurationDetail">
+              <MappingFragment StoreEntitySet="TestConfigurationDetail">
+                <ScalarProperty Name="DecissionPercentage" ColumnName="DecissionPercentage" />
+                <ScalarProperty Name="DecissionCount" ColumnName="DecissionCount" />
+                <ScalarProperty Name="DifficultyLevel" ColumnName="DifficultyLevel" />
+                <ScalarProperty Name="TestConfigId" ColumnName="TestConfigId" />
+                <ScalarProperty Name="TestConfigDetailId" ColumnName="TestConfigDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CandidateTestScoreViews">
+            <EntityTypeMapping TypeName="GKASModel.CandidateTestScoreView">
+              <MappingFragment StoreEntitySet="CandidateTestScoreView">
+                <ScalarProperty Name="AnswerResult" ColumnName="AnswerResult" />
+                <ScalarProperty Name="ObtainScore" ColumnName="ObtainScore" />
+                <ScalarProperty Name="TotalScore" ColumnName="TotalScore" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="CandidateTestId" ColumnName="CandidateTestId" />
+                <ScalarProperty Name="CandidateTestDetailId" ColumnName="CandidateTestDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CandidateTestResult_Get" FunctionName="GKASModel.Store.CandidateTestResult_Get">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GKASModel.CandidateTestResult_Get_Result">
+                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
+                <ScalarProperty Name="Icon" ColumnName="Icon" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+                <ScalarProperty Name="NotAttempted" ColumnName="NotAttempted" />
+                <ScalarProperty Name="CorrectQuestions" ColumnName="CorrectQuestions" />
+                <ScalarProperty Name="WrongQuestions" ColumnName="WrongQuestions" />
+                <ScalarProperty Name="TotalMarks" ColumnName="TotalMarks" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CandidateTestResultDetail_Get" FunctionName="GKASModel.Store.CandidateTestResultDetail_Get">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GKASModel.CandidateTestResultDetail_Get_Result">
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="QuestionBody" ColumnName="QuestionBody" />
+                <ScalarProperty Name="OptionA" ColumnName="OptionA" />
+                <ScalarProperty Name="OptionB" ColumnName="OptionB" />
+                <ScalarProperty Name="OptionC" ColumnName="OptionC" />
+                <ScalarProperty Name="OptionD" ColumnName="OptionD" />
+                <ScalarProperty Name="OptionE" ColumnName="OptionE" />
+                <ScalarProperty Name="CorrectAnswer" ColumnName="CorrectAnswer" />
+                <ScalarProperty Name="Hint" ColumnName="Hint" />
+                <ScalarProperty Name="OptionCount" ColumnName="OptionCount" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="QuestionAnswerStatus" ColumnName="QuestionAnswerStatus" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="TestSubjectId" ColumnName="TestSubjectId" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CATConfigurationDetail_Get" FunctionName="GKASModel.Store.CATConfigurationDetail_Get">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GKASModel.CATConfigurationDetail_Get_Result">
+                <ScalarProperty Name="rowIndex" ColumnName="rowIndex" />
+                <ScalarProperty Name="TestConfigId" ColumnName="TestConfigId" />
+                <ScalarProperty Name="DifficultyLevel" ColumnName="DifficultyLevel" />
+                <ScalarProperty Name="DecissionCount" ColumnName="DecissionCount" />
+                <ScalarProperty Name="DecissionPercentage" ColumnName="DecissionPercentage" />
+                <ScalarProperty Name="Currentlevel" ColumnName="Currentlevel" />
+                <ScalarProperty Name="StartLevel" ColumnName="StartLevel" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="CATQuestion_Get" FunctionName="GKASModel.Store.CATQuestion_Get">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GKASModel.CATQuestion_Get_Result">
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="QuestionBody" ColumnName="QuestionBody" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="CorrectAnswer" ColumnName="CorrectAnswer" />
+                <ScalarProperty Name="AnswerType" ColumnName="AnswerType" />
+                <ScalarProperty Name="OptionA" ColumnName="OptionA" />
+                <ScalarProperty Name="OptionB" ColumnName="OptionB" />
+                <ScalarProperty Name="OptionC" ColumnName="OptionC" />
+                <ScalarProperty Name="OptionD" ColumnName="OptionD" />
+                <ScalarProperty Name="OptionE" ColumnName="OptionE" />
+                <ScalarProperty Name="OptionCount" ColumnName="OptionCount" />
+                <ScalarProperty Name="Hint" ColumnName="Hint" />
+                <ScalarProperty Name="DifficultyLevel" ColumnName="DifficultyLevel" />
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
+                <ScalarProperty Name="SubjectName" ColumnName="SubjectName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="CandidateTests">
+            <EntityTypeMapping TypeName="GKASModel.CandidateTest">
+              <MappingFragment StoreEntitySet="CandidateTest">
+                <ScalarProperty Name="AverageQuestionTime" ColumnName="AverageQuestionTime" />
+                <ScalarProperty Name="TotalQuestion" ColumnName="TotalQuestion" />
+                <ScalarProperty Name="TotalUnattempted" ColumnName="TotalUnattempted" />
+                <ScalarProperty Name="TotalIncorrect" ColumnName="TotalIncorrect" />
+                <ScalarProperty Name="TotalCorrect" ColumnName="TotalCorrect" />
+                <ScalarProperty Name="ObtainScore" ColumnName="ObtainScore" />
+                <ScalarProperty Name="TotalScore" ColumnName="TotalScore" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="TestId" ColumnName="TestId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CandidateTestId" ColumnName="CandidateTestId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CandidateTestDetails">
+            <EntityTypeMapping TypeName="GKASModel.CandidateTestDetail">
+              <MappingFragment StoreEntitySet="CandidateTestDetail">
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="CandidateTestId" ColumnName="CandidateTestId" />
+                <ScalarProperty Name="CandidateTestDetailId" ColumnName="CandidateTestDetailId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

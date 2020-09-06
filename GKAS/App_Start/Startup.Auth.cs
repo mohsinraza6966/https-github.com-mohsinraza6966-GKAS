@@ -22,19 +22,34 @@ namespace GKAS
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // Configure the sign in cookie
+
+            var provider = new CookieAuthenticationProvider()
+            {
+                // Enables the application to validate the security stamp when the user logs in.
+                // This is a security feature which is used when you change a password or add an external login to your account.                  
+                OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser, long>(
+                            validateInterval: TimeSpan.FromMinutes(60),
+                            regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager),
+                            getUserIdCallback: id => id.GetUserId<long>())
+
+            };
+
+            var originalHandler = provider.OnApplyRedirect;
+            provider.OnApplyRedirect = context =>
+            {
+                if (!context.Request.Uri.LocalPath.ToLower().StartsWith(System.Web.VirtualPathUtility.ToAbsolute("~/api").ToLower()))
+                {
+                    context.RedirectUri = new Uri(context.RedirectUri).PathAndQuery;
+
+                    originalHandler.Invoke(context);
+                }
+            };
+
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                Provider = new CookieAuthenticationProvider
-                {
-                    // Enables the application to validate the security stamp when the user logs in.
-                    // This is a security feature which is used when you change a password or add an external login to your account.  
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser, long>(
-                        validateInterval: TimeSpan.FromMinutes(30),
-                        regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager),
-                             getUserIdCallback: id => id.GetUserId<long>())
-                }
+                Provider = provider
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
@@ -56,14 +71,60 @@ namespace GKAS
             //   consumerSecret: "");
 
             //app.UseFacebookAuthentication(
-            //   appId: "1191341047908136",
-            //   appSecret: "cb49ae705c7b27b3da8e623592754998");
+            //   appId: "",
+            //   appSecret: "");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
-            //    ClientId = "928439975010-rto1v35nshmh0vnrlbdaoufhumhg8mph.apps.googleusercontent.com",
-            //    ClientSecret = "bByoIoFtEXq8tFCLXMz2Z__H"
+            //    ClientId = "",
+            //    ClientSecret = ""
             //});
+
         }
+
+        //app.UseCookieAuthentication(new CookieAuthenticationOptions
+        //{
+        //    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+        //    LoginPath = new PathString("/Account/Login"),
+        //    Provider = new CookieAuthenticationProvider
+        //    {
+        //        // Enables the application to validate the security stamp when the user logs in.
+        //        // This is a security feature which is used when you change a password or add an external login to your account.  
+        //        OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser, long>(
+        //            validateInterval: TimeSpan.FromMinutes(60),
+        //            regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager),
+        //                 getUserIdCallback: id => id.GetUserId<long>())
+        //    }
+        //});
+        //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+        //// Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
+        //app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
+
+        //// Enables the application to remember the second login verification factor such as phone or email.
+        //// Once you check this option, your second step of verification during the login process will be remembered on the device where you logged in from.
+        //// This is similar to the RememberMe option when you log in.
+        //app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
+
+        //// Uncomment the following lines to enable logging in with third party login providers
+        ////app.UseMicrosoftAccountAuthentication(
+        ////    clientId: "",
+        ////    clientSecret: "");
+
+        ////app.UseTwitterAuthentication(
+        ////   consumerKey: "",
+        ////   consumerSecret: "");
+
+        ////app.UseFacebookAuthentication(
+        ////   appId: "1191341047908136",
+        ////   appSecret: "cb49ae705c7b27b3da8e623592754998");
+
+        ////app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+        ////{
+        ////    ClientId = "928439975010-rto1v35nshmh0vnrlbdaoufhumhg8mph.apps.googleusercontent.com",
+        ////    ClientSecret = "bByoIoFtEXq8tFCLXMz2Z__H"
+        ////});
+        ///}
+    
     }
 }
