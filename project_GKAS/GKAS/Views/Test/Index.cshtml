@@ -1,0 +1,85 @@
+﻿@*@model IEnumerable<Repository.Test>*@
+@using GKAS.Models;
+@model List<TestViewModel>
+
+
+@{
+    ViewBag.Title = "Index";
+    var currentRole = User.IsInRole("superadmin") == true ? "superadmin" : "candidate";
+}
+
+<h2>Index</h2>
+
+<p>
+    @if (currentRole == "superadmin")
+    {
+        @Html.ActionLink("Create New", "Create")
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Name")
+        </th>
+        <th>
+            @Html.DisplayName("Question Count")
+        </th>
+        <th>
+            @Html.DisplayName("Duration")
+        </th>
+        <th>
+            @Html.DisplayName("Status")
+        </th>
+        <th>
+            @Html.DisplayName("Subject Name")
+        </th>
+        <th>@Html.DisplayName("Action")</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @if (currentRole == "superadmin")
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.TestId }) <span>|</span>
+                    @Html.ActionLink("Details", "Details", new { id = item.TestId }) <span>|</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TestId })
+                }
+                @if (currentRole == "candidate")
+                {
+                    if (item.IsAttempted)
+                    {
+                        // public const string Result = "result";
+                        // public const string Detail = "detail";
+                        //viewResult
+                        @Html.ActionLink("View Result", "Attempt", new { testId = item.TestId, viewResult = "result" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Attempt", "Attempt", new { testId = item.TestId })
+                    }
+
+
+                }
+            </td>
+        </tr>
+    }
+
+</table>

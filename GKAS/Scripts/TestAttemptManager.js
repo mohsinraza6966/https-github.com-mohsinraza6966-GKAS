@@ -386,6 +386,7 @@ function TestAttemptFormManager() {
 
     function GetCandidateAnswer() {
         var val = [];
+        debugger
         $('.div-question-option input[type=checkbox]:checked').each(function (i) {
             val[i] = $(this).val();
         });
@@ -654,6 +655,7 @@ function TestAttemptFormManager() {
             questId = globalVar.QuestionList[0].QuestionId;
         }
         var candidateAnswer = GetCandidateAnswer();
+        $('.div-question-option input[type=checkbox]:checked').prop('checked', false)
         var testId = domElement.hfTestId.val();
         var userId = domElement.hfUserId.val();
 
@@ -753,7 +755,8 @@ function TestAttemptFormManager() {
     }
 
     function ShowHideAnswerOptions(optionsCount, CandidateAnswers, correctAnswers, answerType) {
-
+        debugger;
+        answerType = 1; //Single
         domElement.divOptionA.closest('.question-option-box').hide();
         domElement.divOptionB.closest('.question-option-box').hide();
         domElement.divOptionC.closest('.question-option-box').hide();
@@ -761,7 +764,7 @@ function TestAttemptFormManager() {
         domElement.divOptionE.closest('.question-option-box').hide();
 
         var makeRadioButton = false;
-        if (answerType == "Single") {
+        if (answerType == 1) {
             makeRadioButton = true;
         }
 
@@ -785,8 +788,8 @@ function TestAttemptFormManager() {
             domElement.divOptionE.closest('.question-option-box').show().find('input:checkbox').attr("checked", false).attr("data-makeRadio", makeRadioButton);
         }
 
+        $(":checkbox").prop('checked', false)
         if (CandidateAnswers != "") {
-
             $.each(CandidateAnswers.split(','), function (index, CandidateAnswer) {
                 $("input[name=answer][value=" + CandidateAnswer + "]").prop('checked', true);
             });
@@ -795,7 +798,7 @@ function TestAttemptFormManager() {
 
         if (globalVar.ViewResultDetail) {
             $("input[name=answer]").prop('disabled', true);
-
+            debugger
             SetAnswerStatusWithColorForResult(CandidateAnswers, correctAnswers, optionsCount);
         }
     }
@@ -1184,7 +1187,7 @@ function TestAttemptFormManager() {
     }
 
     function SetAnswerStatusWithColorForResult(CandidateAnswers, correctAnswers, optionsCount) {
-
+        debugger;
         var incorrectAnswerClass = "incorrect-answer-icon";
 
         //show question options as per parameter optionsCount value 
