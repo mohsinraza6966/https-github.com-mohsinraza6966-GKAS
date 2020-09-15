@@ -134,7 +134,7 @@ namespace GKAS.BusinessLogic
             {
                 QuestionId = c.QuestionId,
                 Body = c.QuestionBody,
-                CorrectAnswers = c.CorrectAnswer,
+                CorrectAnswers = c.CorrectAnswer.Trim(),
                 OptionCount = c.OptionCount ?? 0,
                 Explanation = (string.IsNullOrEmpty(c.Explanation)) ? "" : c.Explanation,
                 Hint = (string.IsNullOrEmpty(c.Hint)) ? "" : c.Hint,
